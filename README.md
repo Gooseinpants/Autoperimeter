@@ -1,2 +1,2 @@
 # Autoperimeter
-Software for automatisation 
+Software for automatiс building an attack perimeter
