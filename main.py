@@ -1,6 +1,7 @@
 import netlas
 import re
 import sys
+import json
 
 
 def parse_args(argv):
@@ -68,9 +69,38 @@ def is_flags(s):
         return 0
 
 def domain_research(domain_name):
+    direct_dns_records(domain_name)
+
+
+def direct_dns_records(domain_name): 
     sQuery = "domain:" + domain_name
     query_res = netlas_connection.query(query=sQuery, datatype='domain')
-    print(query_res)
+    items = (query_res['items'])
+    for i in range(len(items)):
+        records_of_domain = items[i]['data']
+        if 'txt' in records_of_domain:
+            txt_record = records_of_domain['txt']
+            print(txt_record)
+        if 'a' in records_of_domain:
+            a_record = records_of_domain['a']
+            for a in range(len(a_record)):
+                IPs.add(a_record[a])
+        if 'ns' in records_of_domain:
+            ns_record = records_of_domain['ns']
+            for ns in range(len(ns_record)):
+                domains.add(ns_record[ns])
+                #print(ns_record[ns])
+        if 'mx' in records_of_domain:
+            mx_record = records_of_domain['mx']
+            for mx in range(len(mx_record)):
+                domains.add(mx_record[mx])
+                #print(mx_record[mx])
+        if 'cname' in records_of_domain:
+            cname_record = records_of_domain['cname']
+            for cname in range(len(cname_record)):
+                domains.add(cname_record[cname])
+                #print(cname_record[cname])
+
 
 def IP_research():
     print("tbd")
@@ -111,7 +141,8 @@ if (api_key == ''):
 else:    
     netlas_connection = netlas.Netlas(api_key=api_key)
 
-
+IPs = set()
+domains = set()
 for i in args:
     if is_uri(i):
         print("URI\n")
@@ -134,6 +165,9 @@ for i in args:
         print(i, 'is not a valid target')
         break
     
-    
+for IP in IPs:
+    print(IP)
+for domain in domains:
+    print(domain)
 
 
