@@ -70,7 +70,9 @@ def is_flags(s):
 
 def domain_research(domain_name):
     direct_dns_records(domain_name)
-
+    subdomains(domain_name)
+    sidedomains(domain_name)
+    dif_lvl_domains(domain_name)
 
 def direct_dns_records(domain_name): 
     sQuery = "domain:" + domain_name
@@ -100,6 +102,15 @@ def direct_dns_records(domain_name):
             for cname in range(len(cname_record)):
                 domains.add(cname_record[cname])
                 #print(cname_record[cname])
+
+def subdomains(domain_name)     # *.domain.name
+    print('tbd')
+
+def sidedomains(domain_name)    # domain.[ru|com|cz|...]
+    print('tbd')
+
+def dif_lvl_domains(domain_name)    # domain.*.[ru|com|cz|...]
+    print('tbd')
 
 
 def IP_research():
