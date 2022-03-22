@@ -1,6 +1,7 @@
 import netlas
 import re
-from sys import argv
+import sys
+
 
 def parse_args(argv):
     if argv[1][0] != '-':
@@ -66,52 +67,72 @@ def is_flags(s):
     else:
         return 0
 
-def domain_research():
-    print("tbd")
+def domain_research(domain_name):
+    sQuery = "domain:" + domain_name
+    query_res = netlas_connection.query(query=sQuery, datatype='domain')
+    print(query_res)
 
 def IP_research():
     print("tbd")
 
-def enter_api_key(args):
+def enter_api_key():
     for i in args:
         if (is_flags(i) == 0):
+            global api_key
             api_key = i
             f = open('config', 'w')
             f.write(i)
             f.close()
             break
 
-def parse_flags(flags, args):
+def parse_flags(flags):
     for i in flags:
         if i == 'h':
             print_help()
         elif i == 'c':
-            enter_api_key(args)
+            enter_api_key()
 
-args = parse_args(argv)
+
+
+api_key = ''
+args = parse_args(sys.argv)
+for i in args:
+    if is_flags(i):
+        parse_flags(i)
+
+if (api_key != ''):
+    sys.exit()
+
+f = open('config')
+api_key = f.read()
+if (api_key == ''):
+    print('Enter your Netlas API key')
+    sys.exit()
+else:    
+    netlas_connection = netlas.Netlas(api_key=api_key)
+
+
 for i in args:
     if is_uri(i):
         print("URI\n")
+        break
     elif is_domain(i):
-        print("domain\n")
+        domain_research(i)
+        break
     elif is_ip(i):
         print("IP\n")
+        break
     elif is_subnet(i):
         print("subnet\n")
+        break
     elif is_as(i):
         print("AS\n")
+        break
     elif is_flags(i):
-        parse_flags(i, args)
+        continue
     else:
-        print(i, "is not a valid target")
-f = open('config')
-apikey = f.read()
-print(apikey)
-if (apikey == ''):
-    print('Enter your Netlas API key')
-else:    
-    netlas_connection = netlas.Netlas(api_key=apikey)
-    
+        print(i, 'is not a valid target')
+        break
     
     
 
