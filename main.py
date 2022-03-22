@@ -103,13 +103,13 @@ def direct_dns_records(domain_name):
                 domains.add(cname_record[cname])
                 #print(cname_record[cname])
 
-def subdomains(domain_name)     # *.domain.name
+def subdomains(domain_name):     # *.domain.name
     print('tbd')
 
-def sidedomains(domain_name)    # domain.[ru|com|cz|...]
+def sidedomains(domain_name):    # domain.[ru|com|cz|...]
     print('tbd')
 
-def dif_lvl_domains(domain_name)    # domain.*.[ru|com|cz|...]
+def dif_lvl_domains(domain_name):    # domain.*.[ru|com|cz|...]
     print('tbd')
 
 
