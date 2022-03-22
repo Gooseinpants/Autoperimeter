@@ -16,10 +16,11 @@ def parse_args(argv):
     return args
 
 def print_help():
-    print("Usage: python3 main.py [flags] [target1] [target2] ... [targetn] / [exclude ] \n")
+    print("Usage: python3 main.py [flags] [target] \n")
     print("Target specification: Domain names or IP-adresses\n")
     print("Flags:")
     print("    -h: Print this page")
+    print("    -c: Enter Netlas API key: main.py -c \'API key\'")
 
 def is_ip(s):
     match = re.fullmatch(r'((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)', s)
@@ -60,7 +61,10 @@ def is_as(s):
         return 0
 
 def is_flags(s):
-    print("tbd") 
+    if (s[0] == '-'):
+        return 1
+    else:
+        return 0
 
 def domain_research():
     print("tbd")
@@ -68,11 +72,23 @@ def domain_research():
 def IP_research():
     print("tbd")
 
-apikey = "eNyXJu8UBjTFsJVhgLhNqh92ydlQXfPZ"
-netlas_connection = netlas.Netlas(api_key=apikey)
+def enter_api_key(args):
+    for i in args:
+        if (is_flags(i) == 0):
+            api_key = i
+            f = open('config', 'w')
+            f.write(i)
+            f.close()
+            break
+
+def parse_flags(flags, args):
+    for i in flags:
+        if i == 'h':
+            print_help()
+        elif i == 'c':
+            enter_api_key(args)
+
 args = parse_args(argv)
-if args[0] == "-h":
-    print_help()
 for i in args:
     if is_uri(i):
         print("URI\n")
@@ -85,8 +101,18 @@ for i in args:
     elif is_as(i):
         print("AS\n")
     elif is_flags(i):
-        print("flags\n")
+        parse_flags(i, args)
     else:
         print(i, "is not a valid target")
+f = open('config')
+apikey = f.read()
+print(apikey)
+if (apikey == ''):
+    print('Enter your Netlas API key')
+else:    
+    netlas_connection = netlas.Netlas(api_key=apikey)
+    
+    
+    
 
 
