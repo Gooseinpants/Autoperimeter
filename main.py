@@ -127,9 +127,12 @@ def subdomains(domain_name):  # *.domain.name
 
 
 
-def sidedomains(domain_name):  # domain.[ru|com|cz|...]
-    pass
-    # print('tbd')
+def sidedomains(domain_name):    # domain.[ru|com|cz|...]
+    sQuery = "domain:" + domain_name.split('.')[0]+".*"
+    query_res = netlas_connection.query(query=sQuery, datatype='domain')
+    items = (query_res['items'])
+    for item in items:
+        domains.add(item['data']['domain'])
 
 
 def dif_lvl_domains(domain_name):  # domain.*.[ru|com|cz|...]
