@@ -122,7 +122,9 @@ def subdomains(domain_name):  # *.domain.name
     sQuery = "domain:" + "*." + domain_name
     query_res = netlas_connection.query(query=sQuery, datatype='domain')
     items = (query_res['items'])
-    print(*[item['data']['domain'] for item in items], sep="\n")
+    for item in items:
+        domains.add(item['data']['domain'])
+
 
 
 def sidedomains(domain_name):  # domain.[ru|com|cz|...]
