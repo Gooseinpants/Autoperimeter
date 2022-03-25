@@ -145,7 +145,7 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
     number_of_page = 0
 
     while cnt_of_res['count'] > 0:
-        query_res = netlas_connection.query(query=sQuery, datatype='domain')
+        query_res = netlas_connection.query(query=sQuery, datatype='domain', page=number_of_page)
         items = (query_res['items'])
         for item in items:
             domains.add(item['data']['domain'])
