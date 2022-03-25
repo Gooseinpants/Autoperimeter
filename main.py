@@ -5,7 +5,10 @@ import json
 
 
 def parse_args(argv):
-    if argv[1][0] != '-':
+    if len(argv) == 1:
+        print("Please enter search parameters")
+        sys.exit()
+    elif argv[1][0] != '-':
         args = [argv[1]]
         print("arg = ", args[0])
     elif len(argv) == 2:
@@ -15,7 +18,6 @@ def parse_args(argv):
         args = [argv[1], argv[2]]
         print("flags = ", args[0])
         print("arg = ", args[1])
-    # TODO: добавить обработку случая, когда нет параметров
     return args
 
 
@@ -85,64 +87,75 @@ def domain_research(domain_name):
     direct_dns_records(domain_name)
     subdomains(domain_name)
     sidedomains(domain_name)
-    dif_lvl_domains(domain_name)
 
 
 def direct_dns_records(domain_name):
     sQuery = "domain:" + domain_name
-    query_res = netlas_connection.query(query=sQuery, datatype='domain')
-    items = (query_res['items'])
-    for i in range(len(items)):
-        records_of_domain = items[i]['data']
-        if 'txt' in records_of_domain:
-            txt_record = records_of_domain['txt']
-            print(txt_record)
-        if 'a' in records_of_domain:
-            a_record = records_of_domain['a']
-            for a in range(len(a_record)):
-                IPs.add(a_record[a])
-        if 'ns' in records_of_domain:
-            ns_record = records_of_domain['ns']
-            for ns in range(len(ns_record)):
-                domains.add(ns_record[ns])
-                # print(ns_record[ns])
-        if 'mx' in records_of_domain:
-            mx_record = records_of_domain['mx']
-            for mx in range(len(mx_record)):
-                domains.add(mx_record[mx])
-                # print(mx_record[mx])
-        if 'cname' in records_of_domain:
-            cname_record = records_of_domain['cname']
-            for cname in range(len(cname_record)):
-                domains.add(cname_record[cname])
-                # print(cname_record[cname])
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
+    number_of_page = 0
+
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='domain', page=number_of_page)
+        items = query_res['items']
+
+        for item in items:
+            records_of_domain = item['data']
+            if 'txt' in records_of_domain:
+                txt_record = records_of_domain['txt']
+                print(txt_record)
+            if 'a' in records_of_domain:
+                a_record = records_of_domain['a']
+                for a in a_record:
+                    IPs.add(a)
+            if 'ns' in records_of_domain:
+                ns_record = records_of_domain['ns']
+                for ns in ns_record:
+                    domains.add(ns)
+            if 'mx' in records_of_domain:
+                mx_record = records_of_domain['mx']
+                for mx in mx_record:
+                    domains.add(mx)
+            if 'cname' in records_of_domain:
+                cname_record = records_of_domain['cname']
+                for cname in cname_record:
+                    domains.add(cname)
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
 def subdomains(domain_name):  # *.domain.name
     sQuery = "domain:" + "*." + domain_name
-    query_res = netlas_connection.query(query=sQuery, datatype='domain')
-    items = (query_res['items'])
-    for item in items:
-        domains.add(item['data']['domain'])
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
+    number_of_page = 0
+
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='domain', page=number_of_page)
+        items = (query_res['items'])
+        for item in items:
+            domains.add(item['data']['domain'])
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
+def sidedomains(domain_name):  # domain.[ru|com|cz|...]
+    sQuery = "domain:" + domain_name.split('.')[0] + ".*"
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
+    number_of_page = 0
 
-def sidedomains(domain_name):    # domain.[ru|com|cz|...]
-    sQuery = "domain:" + domain_name.split('.')[0]+".*"
-    query_res = netlas_connection.query(query=sQuery, datatype='domain')
-    items = (query_res['items'])
-    for item in items:
-        domains.add(item['data']['domain'])
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='domain')
+        items = (query_res['items'])
+        for item in items:
+            domains.add(item['data']['domain'])
 
-
-def dif_lvl_domains(domain_name):  # domain.*.[ru|com|cz|...]
-    pass
-    # print('tbd')
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
 def IP_research():
     pass
-    # print("tbd")
 
 
 def enter_api_key():
