@@ -1,6 +1,8 @@
 import netlas
 import re
 import sys
+import networkx as nx
+import matplotlib.pyplot as plt
 import json
 
 
@@ -83,6 +85,9 @@ def is_flags(s):
         return 0
 
 
+G = nx.MultiGraph()  # Our main graph
+
+
 def domain_research(domain_name):
     direct_dns_records(domain_name)
     subdomains(domain_name)
@@ -102,22 +107,27 @@ def direct_dns_records(domain_name):
             records_of_domain = item['data']
             if 'txt' in records_of_domain:
                 txt_record = records_of_domain['txt']
+                G.add_edge(f'{domain_name}', f'{txt_record}', key='txt_record', txt_record=True)
                 print(txt_record)
             if 'a' in records_of_domain:
                 a_record = records_of_domain['a']
                 for a in a_record:
+                    G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=True)
                     IPs.add(a)
             if 'ns' in records_of_domain:
                 ns_record = records_of_domain['ns']
                 for ns in ns_record:
+                    G.add_edge(f'{domain_name}', f'{ns}', key='ns_record', ns_record=True)
                     domains.add(ns)
             if 'mx' in records_of_domain:
                 mx_record = records_of_domain['mx']
                 for mx in mx_record:
+                    G.add_edge(f'{domain_name}', f'{mx}', key='mx_record', mx_record=True)
                     domains.add(mx)
             if 'cname' in records_of_domain:
                 cname_record = records_of_domain['cname']
                 for cname in cname_record:
+                    G.add_edge(f'{domain_name}', f'{cname}', key='cname_record', cname_record=True)
                     domains.add(cname)
 
         cnt_of_res['count'] -= 20  # number of results on one page
@@ -132,7 +142,10 @@ def subdomains(domain_name):  # *.domain.name
     while cnt_of_res['count'] > 0:
         query_res = netlas_connection.query(query=sQuery, datatype='domain', page=number_of_page)
         items = (query_res['items'])
+
         for item in items:
+            tmp = item['data']['domain']
+            G.add_edge(f'{domain_name}', f'{tmp}', key='subdomain', subdomain=True)
             domains.add(item['data']['domain'])
 
         cnt_of_res['count'] -= 20  # number of results on one page
@@ -147,7 +160,10 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
     while cnt_of_res['count'] > 0:
         query_res = netlas_connection.query(query=sQuery, datatype='domain', page=number_of_page)
         items = (query_res['items'])
+
         for item in items:
+            tmp = item['data']['domain']
+            G.add_edge(f'{domain_name}', f'{tmp}', key='side-domain', side_domain=True)
             domains.add(item['data']['domain'])
 
         cnt_of_res['count'] -= 20  # number of results on one page
@@ -222,3 +238,13 @@ for IP in IPs:
     print(IP)
 for domain in domains:
     print(domain)
+
+# Examples of output of our graph
+#  print(G)
+#  print(G.adj)
+#  nx.draw_networkx(G)
+#  plt.show()  # necessary
+
+fh = open("output.adjlist", "wb")
+nx.write_multiline_adjlist(G, fh)
+fh.close()
