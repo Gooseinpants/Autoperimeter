@@ -162,9 +162,13 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
         items = (query_res['items'])
 
         for item in items:
-            tmp = item['data']['domain']
-            G.add_edge(f'{domain_name}', f'{tmp}', key='side-domain', side_domain=True)
-            domains.add(item['data']['domain'])
+            side_domain = item['data']['domain']
+
+            if side_domain == domain_name:
+                continue
+
+            G.add_edge(f'{domain_name}', f'{side_domain}', key='side-domain', side_domain=True)
+            domains.add(side_domain)
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -212,27 +216,34 @@ else:
 
 IPs = set()
 domains = set()
-for i in args:
-    if is_uri(i):
-        print("URI\n")
-        break
-    elif is_domain(i):
-        domain_research(i)
-        break
-    elif is_ip(i):
-        print("IP\n")
-        break
-    elif is_subnet(i):
-        print("subnet\n")
-        break
-    elif is_as(i):
-        print("AS\n")
-        break
-    elif is_flags(i):
-        continue
-    else:
-        print(i, 'is not a valid target')
-        break
+
+
+def Finder(args):
+    for arg in args:
+        if is_uri(arg):
+            print("URI\n")
+            break
+        elif is_domain(arg):
+            domain_research(arg)
+            break
+        elif is_ip(arg):
+            print("IP\n")
+            break
+        elif is_subnet(arg):
+            print("subnet\n")
+            break
+        elif is_as(arg):
+            print("AS\n")
+            break
+        elif is_flags(arg):
+            continue
+        else:
+            print(arg, 'is not a valid target')
+            break
+
+
+if __name__ == "__main__":
+    Finder(args)
 
 for IP in IPs:
     print(IP)
