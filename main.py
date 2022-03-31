@@ -174,8 +174,33 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
         number_of_page += 1
 
 
-def IP_research():
+def IP_research(IP):
+    rDNS(IP)                                #   Domains
+    ports_and_protocols(IP)                 #   Ports and protocols just as targets
+    whois_info(IP)                          #   Subnets, AS and whois stuff
+
+def rDNS(IP):                               #   Link if a-record of ptr-record is IP
     pass
+
+def ports_and_protocols(IP):                #   Check via responses records
+    pass
+    
+def whois_info(IP):                         #   Will be done later
+    pass
+
+
+
+def call_from_results(s):
+    if is_uri(s):
+        print("URI\n")
+    elif is_domain(s):
+        domain_research(s)
+    elif is_ip(s):
+        IP_research(s)
+    elif is_subnet(s):
+        print("subnet\n")
+    elif is_as(s):
+        print("AS\n")
 
 
 def enter_api_key():
