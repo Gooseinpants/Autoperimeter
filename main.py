@@ -92,6 +92,23 @@ def domain_research(domain_name):
     direct_dns_records(domain_name)
     subdomains(domain_name)
     sidedomains(domain_name)
+    #services_dom(domain_name)
+
+def services_dom(domain_name):
+    #Попытка найти сервисы на домене, дело не пошло. Махров В.Д.
+    sQuery = "host:" + domain_name
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='host')
+    number_of_page = 0
+
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='host', page=number_of_page)
+
+        #print("/////////")
+        #print(query_res)
+        #print("/////////")
+
+        items = query_res['items']
+        #уточнить про вид полученной записи и кол-во коинов, допилить. Махров В.Д.
 
 
 def direct_dns_records(domain_name):
@@ -112,7 +129,13 @@ def direct_dns_records(domain_name):
             if 'a' in records_of_domain:
                 a_record = records_of_domain['a']
                 for a in a_record:
-                    G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=True)
+                    #Проверка на айпи массовой регистрации. Не фонтан, но лучше я не придумал. Махров В.Д.
+                    sQuery2 = "a:" + a
+                    cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
+                    if cnt_of_res2['count'] > 10:
+                        G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=False)
+                    else:
+                        G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=True)
                     IPs.add(a)
             if 'ns' in records_of_domain:
                 ns_record = records_of_domain['ns']
