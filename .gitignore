@@ -131,4 +131,4 @@ dmypy.json
 
 # Ignore config-file with API-key
 config
-/output.adjlist
+/output.txt
