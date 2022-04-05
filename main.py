@@ -112,6 +112,14 @@ def services_dom(domain_name):
         # уточнить про вид полученной записи и кол-во коинов, допилить. Махров В.Д.
 
 
+def check_and_add(graph, item, msg):
+    if graph.nodes[f'{item}'].get('Description') is not None:
+        graph.nodes[f'{item}']['Description'] = graph.nodes[f'{item}'][
+                                                    'Description'] + msg
+    else:
+        graph.nodes[f'{item}']['Description'] = msg
+
+
 def direct_dns_records(domain_name):
     sQuery = "domain:" + domain_name
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
@@ -128,11 +136,7 @@ def direct_dns_records(domain_name):
                 G.add_edge(f'{domain_name}', f'{txt_record}', key='txt_record')
                 G.nodes[f'{txt_record}']['txt_record'] = 'True'
 
-                if G.nodes[f'{txt_record}'].get('Description') is not None:
-                    G.nodes[f'{txt_record}']['Description'] = G.nodes[f'{txt_record}'][
-                                                                  'Description'] + f'This is a txt-record received from {domain_name}. '
-                else:
-                    G.nodes[f'{txt_record}']['Description'] = f'This is a txt-record received from {domain_name}. '
+                check_and_add(G, txt_record, f'This is a txt-record received from {domain_name}. ')
 
                 print(txt_record)
 
@@ -146,11 +150,7 @@ def direct_dns_records(domain_name):
                         G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=False)
                         G.nodes[f'{a}']['a_record'] = 'True'
 
-                        if G.nodes[f'{a}'].get('Description') is not None:
-                            G.nodes[f'{a}']['Description'] = G.nodes[f'{a}'][
-                                                                 'Description'] + f'This is an a-record received from {domain_name}. '
-                        else:
-                            G.nodes[f'{a}']['Description'] = f'This is an a-record received from {domain_name}. '
+                        check_and_add(G, a, f'This is an a-record received from {domain_name}. ')
 
                     else:
                         G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=True)
@@ -163,11 +163,7 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{ns}', key='ns_record', ns_record=True)
                     G.nodes[f'{ns}']['ns_record'] = 'True'
 
-                    if G.nodes[f'{ns}'].get('Description') is not None:
-                        G.nodes[f'{ns}']['Description'] = G.nodes[f'{ns}'][
-                                                             'Description'] + f'This is an ns-record received from {domain_name}. '
-                    else:
-                        G.nodes[f'{ns}']['Description'] = f'This is an ns-record received from {domain_name}. '
+                    check_and_add(G, ns, f'This is an ns-record received from {domain_name}. ')
 
                     domains.add(ns)
 
@@ -177,11 +173,7 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{mx}', key='mx_record', mx_record=True)
                     G.nodes[f'{mx}']['mx_record'] = 'True'
 
-                    if G.nodes[f'{mx}'].get('Description') is not None:
-                        G.nodes[f'{mx}']['Description'] = G.nodes[f'{mx}'][
-                                                              'Description'] + f'This is an mx-record received from {domain_name}. '
-                    else:
-                        G.nodes[f'{mx}']['Description'] = f'This is an mx-record received from {domain_name}. '
+                    check_and_add(G, mx, f'This is an mx-record received from {domain_name}. ')
 
                     domains.add(mx)
 
@@ -191,11 +183,7 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{cname}', key='cname_record', cname_record=True)
                     G.nodes[f'{cname}']['cname_record'] = 'True'
 
-                    if G.nodes[f'{cname}'].get('Description') is not None:
-                        G.nodes[f'{cname}']['Description'] = G.nodes[f'{cname}'][
-                                                              'Description'] + f'This is a cname-record received from {domain_name}. '
-                    else:
-                        G.nodes[f'{cname}']['Description'] = f'This is a cname-record received from {domain_name}. '
+                    check_and_add(G, cname, f'This is a cname-record received from {domain_name}. ')
 
                     domains.add(cname)
 
@@ -217,11 +205,7 @@ def subdomains(domain_name):  # *.domain.name
             G.add_edge(f'{domain_name}', f'{tmp}', key='subdomain', subdomain=True)
             G.nodes[f'{tmp}']['subdomain'] = 'True'
 
-            if G.nodes[f'{tmp}'].get('Description') is not None:
-                G.nodes[f'{tmp}']['Description'] = G.nodes[f'{tmp}'][
-                                                         'Description'] + f'This is a subdomain of the {domain_name} domain. '
-            else:
-                G.nodes[f'{tmp}']['Description'] = f'This is a subdomain of the {domain_name} domain. '
+            check_and_add(G, tmp, f'This is a subdomain of the {domain_name} domain. ')
 
             domains.add(item['data']['domain'])
 
@@ -247,11 +231,7 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
             G.add_edge(f'{domain_name}', f'{side_domain}', key='side-domain', side_domain=True)
             G.nodes[f'{side_domain}']['side-domain'] = 'True'
 
-            if G.nodes[f'{side_domain}'].get('Description') is not None:
-                G.nodes[f'{side_domain}']['Description'] = G.nodes[f'{side_domain}'][
-                                                       'Description'] + f'This is a side-domain of the {domain_name} domain. '
-            else:
-                G.nodes[f'{side_domain}']['Description'] = f'This is a side-domain of the {domain_name} domain. '
+            check_and_add(G, side_domain, f'This is a side-domain of the {domain_name} domain. ')
 
             domains.add(side_domain)
 
