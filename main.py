@@ -112,7 +112,7 @@ def services_dom(domain_name):
         # уточнить про вид полученной записи и кол-во коинов, допилить. Махров В.Д.
 
 
-def check_and_add(graph, item, msg):
+def check_and_add_Descr(graph, item, msg):
     if graph.nodes[f'{item}'].get('Description') is not None:
         graph.nodes[f'{item}']['Description'] = graph.nodes[f'{item}'][
                                                     'Description'] + msg
@@ -136,7 +136,7 @@ def direct_dns_records(domain_name):
                 G.add_edge(f'{domain_name}', f'{txt_record}', key='txt_record')
                 G.nodes[f'{txt_record}']['txt_record'] = 'True'
 
-                check_and_add(G, txt_record, f'This is a txt-record received from {domain_name}. ')
+                check_and_add_Descr(G, txt_record, f'This is a txt-record received from {domain_name}. ')
 
                 print(txt_record)
 
@@ -148,13 +148,12 @@ def direct_dns_records(domain_name):
                     cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
                     if cnt_of_res2['count'] > 10:
                         G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=False)
-                        G.nodes[f'{a}']['a_record'] = 'True'
-
-                        check_and_add(G, a, f'This is an a-record received from {domain_name}. ')
-
+                        G.nodes[f'{a}']['a_record'] = 'False'
                     else:
                         G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=True)
-                        G.nodes[f'{a}']['a_record'] = 'False'
+                        G.nodes[f'{a}']['a_record'] = 'True'
+                        check_and_add_Descr(G, a, f'This is an a-record received from {domain_name}. ')
+                        ports_and_protocols(f'{a}')
                     IPs.add(a)
 
             if 'ns' in records_of_domain:
@@ -163,7 +162,7 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{ns}', key='ns_record', ns_record=True)
                     G.nodes[f'{ns}']['ns_record'] = 'True'
 
-                    check_and_add(G, ns, f'This is an ns-record received from {domain_name}. ')
+                    check_and_add_Descr(G, ns, f'This is an ns-record received from {domain_name}. ')
 
                     domains.add(ns)
 
@@ -173,7 +172,7 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{mx}', key='mx_record', mx_record=True)
                     G.nodes[f'{mx}']['mx_record'] = 'True'
 
-                    check_and_add(G, mx, f'This is an mx-record received from {domain_name}. ')
+                    check_and_add_Descr(G, mx, f'This is an mx-record received from {domain_name}. ')
 
                     domains.add(mx)
 
@@ -183,7 +182,7 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{cname}', key='cname_record', cname_record=True)
                     G.nodes[f'{cname}']['cname_record'] = 'True'
 
-                    check_and_add(G, cname, f'This is a cname-record received from {domain_name}. ')
+                    check_and_add_Descr(G, cname, f'This is a cname-record received from {domain_name}. ')
 
                     domains.add(cname)
 
@@ -198,6 +197,7 @@ def subdomains(domain_name):  # *.domain.name
 
     while cnt_of_res['count'] > 0:
         query_res = netlas_connection.query(query=sQuery, datatype='domain', page=number_of_page)
+        # print(json.dumps(query_res, sort_keys=True, indent=4))
         items = (query_res['items'])
 
         for item in items:
@@ -205,7 +205,7 @@ def subdomains(domain_name):  # *.domain.name
             G.add_edge(f'{domain_name}', f'{tmp}', key='subdomain', subdomain=True)
             G.nodes[f'{tmp}']['subdomain'] = 'True'
 
-            check_and_add(G, tmp, f'This is a subdomain of the {domain_name} domain. ')
+            check_and_add_Descr(G, tmp, f'This is a subdomain of the {domain_name} domain. ')
 
             domains.add(item['data']['domain'])
 
@@ -231,7 +231,7 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
             G.add_edge(f'{domain_name}', f'{side_domain}', key='side-domain', side_domain=True)
             G.nodes[f'{side_domain}']['side-domain'] = 'True'
 
-            check_and_add(G, side_domain, f'This is a side-domain of the {domain_name} domain. ')
+            check_and_add_Descr(G, side_domain, f'This is a side-domain of the {domain_name} domain. ')
 
             domains.add(side_domain)
 
@@ -250,7 +250,55 @@ def rDNS(IP):  # Link if a-record of ptr-record is IP
 
 
 def ports_and_protocols(IP):  # Check via responses records
-    pass
+    sQuery = "ip:" + IP
+    cnt_of_res = netlas_connection.count(query=sQuery)
+    number_of_page = 0
+
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, page=number_of_page)
+        items = (query_res['items'])
+        # Тут получается что есть порты и для домена и для айпи
+        #  Например, https://194.190.225.226:443/ и https://cnd-b1.spbstu.ru:443/ (194.190.225.226 (194.190.225.0-194.190.225.255), cnd-b1.spbstu.ru)
+        for item in items:
+            port = item['data']['port']
+            protocol = item['data']['protocol']
+            prot7 = item['data']['prot7']
+
+            #  Возможно есть лишние условия
+            if G.nodes[IP].get('a_record') is not None and G.nodes[IP]['a_record'] == 'True':
+                if G.nodes[IP].get('port') is not None:
+                    G.nodes[IP]['port'].add(port)
+                else:
+                    G.nodes[IP]['port'] = {port}
+
+                if G.nodes[IP].get('protocol') is not None:
+                    G.nodes[IP]['protocol'].add(protocol)
+                else:
+                    G.nodes[IP]['protocol'] = {protocol}
+
+                if G.nodes[IP].get('prot7') is not None:
+                    G.nodes[IP]['prot7'].add(prot7)
+                else:
+                    G.nodes[IP]['prot7'] = {prot7}
+
+            elif G.nodes[IP].get('a_record') is None:
+                if G.nodes[IP].get('port') is not None:
+                    G.nodes[IP]['port'].add(port)
+                else:
+                    G.nodes[IP]['port'] = {port}
+
+                if G.nodes[IP].get('protocol') is not None:
+                    G.nodes[IP]['protocol'].add(protocol)
+                else:
+                    G.nodes[IP]['protocol'] = {protocol}
+
+                if G.nodes[IP].get('prot7') is not None:
+                    G.nodes[IP]['prot7'].add(prot7)
+                else:
+                    G.nodes[IP]['prot7'] = {prot7}
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
 def whois_info(IP):  # Will be done later
@@ -319,7 +367,7 @@ def Finder(args):
             domain_research(arg)
             break
         elif is_ip(arg):
-            print("IP\n")
+            IP_research(arg)
             break
         elif is_subnet(arg):
             print("subnet\n")
@@ -337,10 +385,10 @@ def Finder(args):
 if __name__ == "__main__":
     Finder(args)
 
-for IP in IPs:
-    print(IP)
-for domain in domains:
-    print(domain)
+# for IP in IPs:
+#     print(IP)
+# for domain in domains:
+#     print(domain)
 
 # Examples of output of our graph
 print(G)
