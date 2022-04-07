@@ -1,0 +1,84 @@
+#main.py acribia.ru
+# GMT Fri Apr  1 11:07:45 2022
+# 
+acribia.ru 41
+['v=spf1 ip4:81.29.134.163 include:_spf.google.com ~all'] {'txt_record': True}
+185.215.4.10 {'a_record': False}
+mail-gw.acribia.ru {'mx_record': True}
+mail-gw.acribia.ru {'subdomain': True}
+mail.acribia.ru {'mx_record': True}
+mail.acribia.ru {'subdomain': True}
+cdn.acribia.ru {'subdomain': True}
+mail-msk01.acribia.ru {'subdomain': True}
+telegrambot.acribia.ru {'subdomain': True}
+autodiscover.acribia.ru {'subdomain': True}
+www.acribia.ru {'subdomain': True}
+en.acribia.ru {'subdomain': True}
+kyy.acribia.ru {'subdomain': True}
+www.en.acribia.ru {'subdomain': True}
+cw.acribia.ru {'subdomain': True}
+wiki.acribia.ru {'subdomain': True}
+proget.acribia.ru {'subdomain': True}
+xmpp.acribia.ru {'subdomain': True}
+soc.acribia.ru {'subdomain': True}
+bravo.acribia.ru {'subdomain': True}
+voip.acribia.ru {'subdomain': True}
+alert.acribia.ru {'subdomain': True}
+tets.acribia.ru {'subdomain': True}
+acribia.group {'side_domain': True}
+acribia.publica.la {'side_domain': True}
+acribia.site {'side_domain': True}
+acribia.it {'side_domain': True}
+acribia.swiss {'side_domain': True}
+acribia.online {'side_domain': True}
+acribia.com.bo {'side_domain': True}
+acribia.cloud {'side_domain': True}
+acribia.shop {'side_domain': True}
+acribia.ca {'side_domain': True}
+acribia.es {'side_domain': True}
+acribia.info {'side_domain': True}
+acribia.net {'side_domain': True}
+acribia.eco {'side_domain': True}
+acribia.crmcloud.online {'side_domain': True}
+acribia.eu {'side_domain': True}
+acribia.pt {'side_domain': True}
+acribia.ch {'side_domain': True}
+['v=spf1 ip4:81.29.134.163 include:_spf.google.com ~all'] 0
+185.215.4.10 0
+mail-gw.acribia.ru 0
+mail.acribia.ru 0
+cdn.acribia.ru 0
+mail-msk01.acribia.ru 0
+telegrambot.acribia.ru 0
+autodiscover.acribia.ru 0
+www.acribia.ru 0
+en.acribia.ru 0
+kyy.acribia.ru 0
+www.en.acribia.ru 0
+cw.acribia.ru 0
+wiki.acribia.ru 0
+proget.acribia.ru 0
+xmpp.acribia.ru 0
+soc.acribia.ru 0
+bravo.acribia.ru 0
+voip.acribia.ru 0
+alert.acribia.ru 0
+tets.acribia.ru 0
+acribia.group 0
+acribia.publica.la 0
+acribia.site 0
+acribia.it 0
+acribia.swiss 0
+acribia.online 0
+acribia.com.bo 0
+acribia.cloud 0
+acribia.shop 0
+acribia.ca 0
+acribia.es 0
+acribia.info 0
+acribia.net 0
+acribia.eco 0
+acribia.crmcloud.online 0
+acribia.eu 0
+acribia.pt 0
+acribia.ch 0
