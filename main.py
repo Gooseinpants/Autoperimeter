@@ -92,24 +92,40 @@ def domain_research(domain_name):
     direct_dns_records(domain_name)
     subdomains(domain_name)
     sidedomains(domain_name)
-    # services_dom(domain_name)
+    services_dom(domain_name)
 
 
 def services_dom(domain_name):
-    # Попытка найти сервисы на домене, дело не пошло. Махров В.Д.
+    # Попытка найти сервисы на домене, дело продвигается. Махров В.Д.
     sQuery = "host:" + domain_name
-    cnt_of_res = netlas_connection.count(query=sQuery, datatype='host')
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
 
     while cnt_of_res['count'] > 0:
-        query_res = netlas_connection.query(query=sQuery, datatype='host', page=number_of_page)
-
-        # print("/////////")
-        # print(query_res)
-        # print("/////////")
-
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
         items = query_res['items']
-        # уточнить про вид полученной записи и кол-во коинов, допилить. Махров В.Д.
+        for item in items:
+            #print('///////////')
+            #print(json.dumps(item, sort_keys=True, indent=4))
+            #print('///////////')
+            high = item['highlight']
+            data = item['data']
+            http = data['http']
+            header = http['headers']
+
+            if 'host' in high:
+                hs = high['host']
+                if 'status_code' in http:
+                    sc = http['status_code']
+                    print('Service on domain: ' + hs + ', Status code: ', + sc)
+
+            #header = high['headers']
+            #if 'status_code' in header:
+                #sc = high['status_code']
+                #print(sc)
+                #print('///////////')
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
 def check_and_add_Descr(graph, item, msg):
@@ -146,7 +162,7 @@ def direct_dns_records(domain_name):
                     # Проверка на айпи массовой регистрации. Не фонтан, но лучше я не придумал. Махров В.Д.
                     sQuery2 = "a:" + a
                     cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
-                    if cnt_of_res2['count'] > 10:
+                    if cnt_of_res2['count'] > 30:
                         G.add_edge(f'{domain_name}', f'{a}', key='a_record', a_record=False)
                         G.nodes[f'{a}']['a_record'] = 'False'
                     else:
