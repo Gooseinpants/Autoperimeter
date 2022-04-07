@@ -165,7 +165,7 @@ def direct_dns_records(domain_name):
                     else:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=True)
                         check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
-                        ports_and_protocols(f'{a}')
+                        URI_search(f'{a}')
                     IPs.add(a)
 
             if 'ns' in records_of_domain:
@@ -246,16 +246,11 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 
 
 def IP_research(IP):
-    rDNS(IP)  # Domains
-    ports_and_protocols(IP)  # Ports and protocols just as targets
+    URI_search(IP)  # Ports and protocols just as targets
     whois_info(IP)  # Subnets, AS and whois stuff
 
 
-def rDNS(IP):  # Link if a-record of ptr-record is IP
-    pass
-
-
-def ports_and_protocols(IP):  # Check via responses records
+def URI_search(IP):  # Check via responses records
     sQuery = "host:" + IP
     cnt_of_res = netlas_connection.count(query=sQuery)
     number_of_page = 0
@@ -265,43 +260,14 @@ def ports_and_protocols(IP):  # Check via responses records
         items = (query_res['items'])
 
         for item in items:
-            port = item['data']['port']
-            protocol = item['data']['protocol']
-            prot7 = item['data']['prot7']
-
-            #  Возможно есть лишние условия
-            if G.nodes[IP].get('a_record') is not None and G.nodes[IP]['a_record'] == 'True':
-                if G.nodes[IP].get('port') is not None:
-                    G.nodes[IP]['port'].add(port)
-                else:
-                    G.nodes[IP]['port'] = {port}
-
-                if G.nodes[IP].get('protocol') is not None:
-                    G.nodes[IP]['protocol'].add(protocol)
-                else:
-                    G.nodes[IP]['protocol'] = {protocol}
-
-                if G.nodes[IP].get('prot7') is not None:
-                    G.nodes[IP]['prot7'].add(prot7)
-                else:
-                    G.nodes[IP]['prot7'] = {prot7}
-
-            elif G.nodes[IP].get('a_record') is None:
-                if G.nodes[IP].get('port') is not None:
-                    G.nodes[IP]['port'].add(port)
-                else:
-                    G.nodes[IP]['port'] = {port}
-
-                if G.nodes[IP].get('protocol') is not None:
-                    G.nodes[IP]['protocol'].add(protocol)
-                else:
-                    G.nodes[IP]['protocol'] = {protocol}
-
-                if G.nodes[IP].get('prot7') is not None:
-                    G.nodes[IP]['prot7'].add(prot7)
-                else:
-                    G.nodes[IP]['prot7'] = {prot7}
-
+            uri = item['data']['uri']
+            G.add_edge(f'{IP}', f'{uri}', URI=True)
+            msg = f'This is an URI received from {IP}. '
+            if G[f'{IP}'][f'{uri}'].get('Description') is not None:
+                G[f'{IP}'][f'{uri}']['Description'] = G[f'{IP}'][f'{uri}'][
+                                                                     'Description'] + msg
+            else:
+                G[f'{IP}'][f'{uri}']['Description'] = msg
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
 
