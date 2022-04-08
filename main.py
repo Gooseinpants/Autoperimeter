@@ -96,7 +96,7 @@ def domain_research(domain_name):
 
 
 def services_dom(domain_name):
-    # Попытка найти сервисы на домене, дело продвигается. Махров В.Д.
+    # Нахождение сервисов на домене, всё работает. Махров В.Д.
     sQuery = "host:" + domain_name
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
@@ -111,19 +111,19 @@ def services_dom(domain_name):
             high = item['highlight']
             data = item['data']
             http = data['http']
+            uri = data['uri']
             header = http['headers']
 
-            if 'host' in high:
-                hs = high['host']
-                if 'status_code' in http:
-                    sc = http['status_code']
-                    print('Service on domain: ' + hs + ', Status code: ', + sc)
+            if 'status_code' in http:
+                sc = http['status_code']
+                if sc == 301 or sc == 302:
+                    if 'location' in header:
+                        locs = header['location']
+                        for loc in locs:
+                            print('Service on domain: ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
+                else:
+                    print('Service on domain: ' + uri + ', Status code: ' + str(sc))
 
-            # header = high['headers']
-            # if 'status_code' in header:
-            # sc = high['status_code']
-            # print(sc)
-            # print('///////////')
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
 
@@ -243,7 +243,41 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 def IP_research(IP):
     URI_search(IP)  # Ports and protocols just as targets
     whois_info(IP)  # Subnets, AS and whois stuff
+    services_IP(IP)
     G.nodes[f'{IP}']['Checked'] = True
+
+def services_IP(IP):
+    # Нахождение сервисов на айпи, выдаёт ошибку, но работает, разобраться. Махров В.Д.
+    sQuery = "host:" + IP
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
+    number_of_page = 0
+
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
+        items = query_res['items']
+        for item in items:
+
+            #print('///////////')
+            #print(json.dumps(item, sort_keys=True, indent=4))
+            #print('///////////')
+
+            data = item['data']
+            http = data['http']
+            uri = data['uri']
+            header = http['headers']
+
+            if 'status_code' in http:
+                sc = http['status_code']
+                if sc == 301 or sc == 302:
+                    if 'location' in header:
+                        locs = header['location']
+                        for loc in locs:
+                            print('Service on IP: ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
+                else:
+                    print('Service on IP: ' + uri + ', Status code: ' + str(sc))
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
 def URI_search(IP):  # Check via responses records
