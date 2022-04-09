@@ -129,7 +129,7 @@ def services_dom(domain_name):
 
 
 def check_and_add_Descr(graph, u_node, v_node, msg):
-    if graph[f'{u_node}'][f'{v_node}'].get('Description') is not None:
+    if 'Description' in graph[f'{u_node}'][f'{v_node}']:
         graph[f'{u_node}'][f'{v_node}']['Description'] = graph[f'{u_node}'][f'{v_node}'][
                                                              'Description'] + msg
     else:
@@ -151,8 +151,8 @@ def direct_dns_records(domain_name):
                 txt_record = records_of_domain['txt']
                 G.add_edge(f'{domain_name}', f'{txt_record}', txt_record=True)
                 check_and_add_Descr(G, domain_name, txt_record, f'This is a txt-record received from {domain_name}. ')
-                G.nodes[f'{txt_record}']['Checked'] = False
-                # print(txt_record)
+                if 'Checked' not in G.nodes[f'{txt_record}']:
+                    G.nodes[f'{txt_record}']['Checked'] = False
 
             if 'a' in records_of_domain:
                 a_record = records_of_domain['a']
@@ -162,11 +162,12 @@ def direct_dns_records(domain_name):
                     cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
                     if cnt_of_res2['count'] > 30:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=False)
-                        G.nodes[f'{a}']['Checked'] = False
+                        G.nodes[f'{a}']['Checked'] = True  # нужно ли дальше исследовать такой айпи?
                     else:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=True)
                         check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
-                        G.nodes[f'{a}']['Checked'] = False
+                        if 'Checked' not in G.nodes[f'{a}']:
+                            G.nodes[f'{a}']['Checked'] = False
 
             if 'ns' in records_of_domain:
                 ns_record = records_of_domain['ns']
@@ -174,7 +175,8 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{ns}', ns_record=True)
 
                     check_and_add_Descr(G, domain_name, ns, f'This is an ns-record received from {domain_name}. ')
-                    G.nodes[f'{ns}']['Checked'] = False
+                    if 'Checked' not in G.nodes[f'{ns}']:
+                        G.nodes[f'{ns}']['Checked'] = False
 
             if 'mx' in records_of_domain:
                 mx_record = records_of_domain['mx']
@@ -182,7 +184,8 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{mx}', mx_record=True)
 
                     check_and_add_Descr(G, domain_name, mx, f'This is an mx-record received from {domain_name}. ')
-                    G.nodes[f'{mx}']['Checked'] = False
+                    if 'Checked' not in G.nodes[f'{mx}']:
+                        G.nodes[f'{mx}']['Checked'] = False
 
             if 'cname' in records_of_domain:
                 cname_record = records_of_domain['cname']
@@ -190,7 +193,8 @@ def direct_dns_records(domain_name):
                     G.add_edge(f'{domain_name}', f'{cname}', cname_record=True)
 
                     check_and_add_Descr(G, domain_name, cname, f'This is a cname-record received from {domain_name}. ')
-                    G.nodes[f'{cname}']['Checked'] = False
+                    if 'Checked' not in G.nodes[f'{cname}']:
+                        G.nodes[f'{cname}']['Checked'] = False
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -243,8 +247,9 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 def IP_research(IP):
     URI_search(IP)  # Ports and protocols just as targets
     whois_info(IP)  # Subnets, AS and whois stuff
-    services_IP(IP)
+    # services_IP(IP)
     G.nodes[f'{IP}']['Checked'] = True
+
 
 def services_IP(IP):
     # Нахождение сервисов на айпи, выдаёт ошибку, но работает, разобраться. Махров В.Д.
@@ -257,9 +262,9 @@ def services_IP(IP):
         items = query_res['items']
         for item in items:
 
-            #print('///////////')
-            #print(json.dumps(item, sort_keys=True, indent=4))
-            #print('///////////')
+            # print('///////////')
+            # print(json.dumps(item, sort_keys=True, indent=4))
+            # print('///////////')
 
             data = item['data']
             http = data['http']
@@ -293,8 +298,11 @@ def URI_search(IP):  # Check via responses records
             uri = item['data']['uri']
             G.add_edge(f'{IP}', f'{uri}', URI=True)
             msg = f'This is an URI received from {IP}. '
-            G.nodes[f'{uri}']['Checked'] = False
-            if G[f'{IP}'][f'{uri}'].get('Description') is not None:
+
+            if 'Checked' not in G.nodes[f'{uri}']:
+                G.nodes[f'{uri}']['Checked'] = False
+
+            if 'Description' in G[f'{IP}'][f'{uri}']:
                 G[f'{IP}'][f'{uri}']['Description'] = G[f'{IP}'][f'{uri}']['Description'] + msg
             else:
                 G[f'{IP}'][f'{uri}']['Description'] = msg
@@ -410,7 +418,7 @@ if __name__ == "__main__":
     with open('test.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print("Dispatcher was launched")
-    Dispatcher(2)  # почему-то если больше 2х, то вылетает ошибка
+    Dispatcher(2)  # почему-то если больше 2х, то вылетает ошибка. Вызвано неправильным анализом того, что домен на входе.
 
     with open('test.edgelist', 'r') as f:
         print(*f.readlines())
@@ -419,8 +427,6 @@ if __name__ == "__main__":
 # Graphical output of the graph
 #  nx.draw_networkx(G)
 #  plt.show()  # necessary
-
-#  TODO: разобраться с тем, почему иногда описание дублируется
 
 
 # возможные взаимосвяи:
