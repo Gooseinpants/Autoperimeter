@@ -2,9 +2,10 @@ import netlas
 import re
 import sys
 import networkx as nx
+import urlextract
+from urlextract import URLExtract
 import matplotlib.pyplot as plt
 import json
-
 
 def parse_args(argv):
     if len(argv) == 1:
@@ -120,9 +121,66 @@ def services_dom(domain_name):
                     if 'location' in header:
                         locs = header['location']
                         for loc in locs:
-                            print('Service on domain: ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
+                            print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
                 else:
-                    print('Service on domain: ' + uri + ', Status code: ' + str(sc))
+                    print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc))
+
+#09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
+#и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
+            if 'body' in http:
+                print('Links on service:')
+                body = http['body']
+                extractor = URLExtract()
+                urls = extractor.find_urls(body, check_dns=True)
+                for url in urls:
+                    mark = 1
+
+                    index = str(url).find(".png")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".ico")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".css")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".svg")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".jpg")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".pdf")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".js")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    if mark == 1:
+                        print(str(url))
+
+            print('////////')
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -277,10 +335,64 @@ def services_IP(IP):
                     if 'location' in header:
                         locs = header['location']
                         for loc in locs:
-                            print('Service on IP: ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
+                            print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
                 else:
-                    print('Service on IP: ' + uri + ', Status code: ' + str(sc))
+                    print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(sc))
 
+            if 'body' in http:
+                print('Links on service:')
+                body = http['body']
+                extractor = URLExtract()
+                urls = extractor.find_urls(body, check_dns=True)
+                for url in urls:
+                    mark = 1
+
+                    index = str(url).find(".png")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".ico")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".css")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".svg")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".jpg")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".pdf")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".js")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    if mark == 1:
+                        print(str(url))
+
+            print('////////')
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
 
