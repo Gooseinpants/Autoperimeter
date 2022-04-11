@@ -42,7 +42,10 @@ def is_ip(s):
 def is_domain(s):
     match = re.fullmatch(r'\b[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', s)
     if match:
-        return 1
+        match2 = re.fullmatch(
+            r'((http|https)\:\/\/){1}[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', s)
+        if not match2:
+            return 1
     else:
         return 0
 
@@ -418,7 +421,7 @@ if __name__ == "__main__":
     with open('test.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print("Dispatcher was launched")
-    Dispatcher(2)  # почему-то если больше 2х, то вылетает ошибка. Вызвано неправильным анализом того, что домен на входе.
+    Dispatcher(3)
 
     with open('test.edgelist', 'r') as f:
         print(*f.readlines())
