@@ -47,6 +47,8 @@ def is_domain(s):
             r'((http|https)\:\/\/){1}[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', s)
         if not match2:
             return 1
+        else:
+            return 0
     else:
         return 0
 
