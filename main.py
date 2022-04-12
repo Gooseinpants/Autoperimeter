@@ -100,6 +100,54 @@ def domain_research(domain_name):
     sidedomains(domain_name)
     services_dom(domain_name)
 
+def cross_links(domain_name, domain_name_orig):
+    result = 0
+    finisheds = 0
+    sQuery = "host:" + domain_name
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
+    number_of_page = 0
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
+        items = query_res['items']
+        for item in items:
+
+            # print('///////////')
+            # print(json.dumps(item, sort_keys=True, indent=4))
+            # print('///////////')
+
+            data = item['data']
+            http = data['http']
+            uri = data['uri']
+            header = http['headers']
+
+            if 'status_code' in http:
+                sc = http['status_code']
+                if sc == 200:
+                    if 'body' in http:
+                        body = http['body']
+                        extractor = URLExtract()
+                        urls = extractor.find_urls(body, check_dns=True)
+                        for url in urls:
+                            mark = 1
+
+                            index = str(url).find(str(domain_name_orig))
+                            if index != -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            if mark == 1:
+                                #print('Cross-link: ' + str(url))
+                                result = 1
+                                return result
+
+                    #print('////////')
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
+        finisheds += 20
+        if finisheds == 100:
+            break
+    return result
 
 def services_dom(domain_name):
     # Нахождение сервисов на домене, всё работает. Махров В.Д.
@@ -133,7 +181,7 @@ def services_dom(domain_name):
 #09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
 #и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
             if 'body' in http:
-                print('Links on service:')
+                #print('Links on service:')
                 body = http['body']
                 extractor = URLExtract()
                 urls = extractor.find_urls(body, check_dns=True)
@@ -183,9 +231,36 @@ def services_dom(domain_name):
                         mark = 0
 
                     if mark == 1:
-                        print(str(url))
+                        #print(str(url))
 
-            print('////////')
+#12.04.22 - поиск перекрёстных ссылок. Регулярные выражения это не мой случай. Махров В.Д.
+                        index = str(url).find("www.")
+                        if index != -1:
+                            #print('www.: ' + str(index))
+                            index_save = index + 4
+                            index = str(url).find("/", index_save)
+                            if index != -1:
+                                new_dom = str(url)[index_save:index]
+                            else:
+                                new_dom = str(url)[index_save:]
+                            #print('Domain for cross-links: ' + norm_url)
+                        else:
+                            index = str(url).find("://")
+                            #print('//: ' + str(index))
+                            index_save = index + 3
+                            index = str(url).find("/", index_save)
+                            if index != -1:
+                                new_dom = str(url)[index_save:index]
+                            else:
+                                new_dom = str(url)[index_save:]
+                            #print('Domain for cross-links: ' + norm_url)
+
+                        mark = cross_links(new_dom, domain_name)
+                        if mark == 1:
+                            print('Cross-links with main domain: ' + new_dom)
+
+
+            #print('////////')
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -297,7 +372,8 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 
             if side_domain == domain_name:
                 continue
-
+            #Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
+            #он её проходит. Махров В.Д.
             G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
 
             check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
@@ -310,8 +386,9 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 def IP_research(IP):
     URI_search(IP)  # Ports and protocols just as targets
     whois_info(IP)  # Subnets, AS and whois stuff
-    # services_IP(IP)
+    #services_IP(IP)  #Пока выдаёт ошибку, лучше так
     G.nodes[f'{IP}']['Checked'] = True
+
 
 
 def services_IP(IP):
