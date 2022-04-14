@@ -103,7 +103,7 @@ def domain_research(domain_name):
 def cross_links(domain_name, domain_name_orig):
     result = 0
     finisheds = 0
-    sQuery = "host:" + domain_name
+    sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
     while cnt_of_res['count'] > 0:
@@ -151,7 +151,7 @@ def cross_links(domain_name, domain_name_orig):
 
 def services_dom(domain_name):
     # Нахождение сервисов на домене, всё работает. Махров В.Д.
-    sQuery = "host:" + domain_name
+    sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
 
@@ -257,7 +257,7 @@ def services_dom(domain_name):
 
                         mark = cross_links(new_dom, domain_name)
                         if mark == 1:
-                            print('Cross-links with main domain: ' + new_dom)
+                            print('Has cross-links with main domain: ' + new_dom)
 
 
             #print('////////')
@@ -386,14 +386,14 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 def IP_research(IP):
     URI_search(IP)  # Ports and protocols just as targets
     whois_info(IP)  # Subnets, AS and whois stuff
-    #services_IP(IP)  #Пока выдаёт ошибку, лучше так
+    services_IP(IP)  #Пока выдаёт ошибку, лучше так
     G.nodes[f'{IP}']['Checked'] = True
 
 
 
 def services_IP(IP):
     # Нахождение сервисов на айпи, выдаёт ошибку, но работает, разобраться. Махров В.Д.
-    sQuery = "host:" + IP
+    sQuery = "(host:" + IP + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
 
@@ -409,7 +409,10 @@ def services_IP(IP):
             data = item['data']
             http = data['http']
             uri = data['uri']
-            header = http['headers']
+            if 'headers' in http:
+                header = http['headers']
+            else:
+                continue
 
             if 'status_code' in http:
                 sc = http['status_code']
