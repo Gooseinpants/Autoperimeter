@@ -1,11 +1,25 @@
-import netlas
-import re
 import sys
+import time
+
+import netlas
 import networkx as nx
 import urlextract
 from urlextract import URLExtract
 import matplotlib.pyplot as plt
 import json
+
+import check as ch
+
+DEPTH_OF_SEARCH = 3
+
+
+def print_help():
+    print("Usage: python3 main.py [flags] [target] \n")
+    print("Target specification: Domain names or IP-addresses\n")
+    print("Flags:")
+    print("    -h: Print this page")
+    print("    -c: Enter Netlas API key: main.py -c \'API key\'")
+
 
 def parse_args(argv):
     if len(argv) == 1:
@@ -24,130 +38,16 @@ def parse_args(argv):
     return args
 
 
-def print_help():
-    print("Usage: python3 main.py [flags] [target] \n")
-    print("Target specification: Domain names or IP-addresses\n")
-    print("Flags:")
-    print("    -h: Print this page")
-    print("    -c: Enter Netlas API key: main.py -c \'API key\'")
-
-
-def is_ip(s):
-    match = re.fullmatch(r'((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)', s)
-    if match:
-        return 1
-    else:
-        return 0
-
-
-def is_domain(s):
-    match = re.fullmatch(r'\b[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', s)
-    if match:
-        match2 = re.fullmatch(
-            r'((http|https)\:\/\/){1}[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', s)
-        if not match2:
-            return 1
-        else:
-            return 0
-    else:
-        return 0
-
-
-def is_uri(s):
-    match = re.fullmatch(
-        r'((http|https)\:\/\/){1}[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', s)
-    if match:
-        return 1
-    else:
-        return 0
-
-
-def is_subnet(s):
-    match = re.fullmatch(
-        r'((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/([1-3]?\d)', s)
-    if match:
-        return 1
-    else:
-        match = re.fullmatch(
-            r'((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)-((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)',
-            s)
-        if match:
-            return 1
-        return 0
-
-
-def is_as(s):
-    match = re.fullmatch(r'AS\d{1,5}', s)
-    if match:
-        return 1
-    else:
-        return 0
-
-
-def is_flags(s):
-    if s[0] == '-':
-        return 1
-    else:
-        return 0
-
-
 G = nx.DiGraph()  # Our main graph
 
 
-def domain_research(domain_name):
-    direct_dns_records(domain_name)
-    subdomains(domain_name)
-    sidedomains(domain_name)
-    services_dom(domain_name)
+def check_and_add_Descr(graph, u_node, v_node, msg):
+    if 'Description' in graph[f'{u_node}'][f'{v_node}']:
+        graph[f'{u_node}'][f'{v_node}']['Description'] = graph[f'{u_node}'][f'{v_node}'][
+                                                             'Description'] + msg
+    else:
+        graph[f'{u_node}'][f'{v_node}']['Description'] = msg
 
-def cross_links(domain_name, domain_name_orig):
-    result = 0
-    finisheds = 0
-    sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
-    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
-    number_of_page = 0
-    while cnt_of_res['count'] > 0:
-        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
-        items = query_res['items']
-        for item in items:
-
-            # print('///////////')
-            # print(json.dumps(item, sort_keys=True, indent=4))
-            # print('///////////')
-
-            data = item['data']
-            http = data['http']
-            uri = data['uri']
-            header = http['headers']
-
-            if 'status_code' in http:
-                sc = http['status_code']
-                if sc == 200:
-                    if 'body' in http:
-                        body = http['body']
-                        extractor = URLExtract()
-                        urls = extractor.find_urls(body, check_dns=True)
-                        for url in urls:
-                            mark = 1
-
-                            index = str(url).find(str(domain_name_orig))
-                            if index != -1 and mark == 1:
-                                mark = 1
-                            else:
-                                mark = 0
-
-                            if mark == 1:
-                                #print('Cross-link: ' + str(url))
-                                result = 1
-                                return result
-
-                    #print('////////')
-        cnt_of_res['count'] -= 20  # number of results on one page
-        number_of_page += 1
-        finisheds += 20
-        if finisheds == 100:
-            break
-    return result
 
 def services_dom(domain_name):
     # Нахождение сервисов на домене, всё работает. Махров В.Д.
@@ -162,7 +62,7 @@ def services_dom(domain_name):
             # print('///////////')
             # print(json.dumps(item, sort_keys=True, indent=4))
             # print('///////////')
-            high = item['highlight']
+            # high = item['highlight']
             data = item['data']
             http = data['http']
             uri = data['uri']
@@ -174,14 +74,15 @@ def services_dom(domain_name):
                     if 'location' in header:
                         locs = header['location']
                         for loc in locs:
-                            print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
+                            print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
+                                sc) + ', Redirected to: ' + loc)
                 else:
                     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc))
 
-#09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
-#и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
+            # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
+            # и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
             if 'body' in http:
-                #print('Links on service:')
+                # print('Links on service:')
                 body = http['body']
                 extractor = URLExtract()
                 urls = extractor.find_urls(body, check_dns=True)
@@ -231,47 +132,38 @@ def services_dom(domain_name):
                         mark = 0
 
                     if mark == 1:
-                        #print(str(url))
+                        # print(str(url))
 
-#12.04.22 - поиск перекрёстных ссылок. Регулярные выражения это не мой случай. Махров В.Д.
+                        # 12.04.22 - поиск перекрёстных ссылок. Регулярные выражения это не мой случай. Махров В.Д.
                         index = str(url).find("www.")
                         if index != -1:
-                            #print('www.: ' + str(index))
+                            # print('www.: ' + str(index))
                             index_save = index + 4
                             index = str(url).find("/", index_save)
                             if index != -1:
                                 new_dom = str(url)[index_save:index]
                             else:
                                 new_dom = str(url)[index_save:]
-                            #print('Domain for cross-links: ' + norm_url)
+                            # print('Domain for cross-links: ' + norm_url)
                         else:
                             index = str(url).find("://")
-                            #print('//: ' + str(index))
+                            # print('//: ' + str(index))
                             index_save = index + 3
                             index = str(url).find("/", index_save)
                             if index != -1:
                                 new_dom = str(url)[index_save:index]
                             else:
                                 new_dom = str(url)[index_save:]
-                            #print('Domain for cross-links: ' + norm_url)
+                            # print('Domain for cross-links: ' + norm_url)
 
                         mark = cross_links(new_dom, domain_name)
                         if mark == 1:
                             print('Has cross-links with main domain: ' + new_dom)
 
-
-            #print('////////')
+            # print('////////')
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
-
-
-def check_and_add_Descr(graph, u_node, v_node, msg):
-    if 'Description' in graph[f'{u_node}'][f'{v_node}']:
-        graph[f'{u_node}'][f'{v_node}']['Description'] = graph[f'{u_node}'][f'{v_node}'][
-                                                             'Description'] + msg
-    else:
-        graph[f'{u_node}'][f'{v_node}']['Description'] = msg
 
 
 def direct_dns_records(domain_name):
@@ -372,8 +264,8 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 
             if side_domain == domain_name:
                 continue
-            #Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
-            #он её проходит. Махров В.Д.
+            # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
+            # он её проходит. Махров В.Д.
             G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
 
             check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
@@ -383,16 +275,64 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
         number_of_page += 1
 
 
-def IP_research(IP):
-    URI_search(IP)  # Ports and protocols just as targets
-    whois_info(IP)  # Subnets, AS and whois stuff
-    services_IP(IP)  #Пока выдаёт ошибку, лучше так
-    G.nodes[f'{IP}']['Checked'] = True
+def domain_research(domain_name):
+    direct_dns_records(domain_name)
+    subdomains(domain_name)
+    sidedomains(domain_name)
+    services_dom(domain_name)
 
+
+def cross_links(domain_name, domain_name_orig):
+    result = 0
+    finisheds = 0
+    sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
+    number_of_page = 0
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
+        items = query_res['items']
+        for item in items:
+
+            # print('///////////')
+            # print(json.dumps(item, sort_keys=True, indent=4))
+            # print('///////////')
+
+            data = item['data']
+            http = data['http']
+            # uri = data['uri']
+            # header = http['headers']
+
+            if 'status_code' in http:
+                sc = http['status_code']
+                if sc == 200:
+                    if 'body' in http:
+                        body = http['body']
+                        extractor = URLExtract()
+                        urls = extractor.find_urls(body, check_dns=True)
+                        for url in urls:
+                            mark = 1
+
+                            index = str(url).find(str(domain_name_orig))
+                            if index != -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            if mark == 1:
+                                # print('Cross-link: ' + str(url))
+                                result = 1
+                                return result
+
+                    # print('////////')
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
+        finisheds += 20
+        if finisheds == 100:
+            break
+    return result
 
 
 def services_IP(IP):
-    # Нахождение сервисов на айпи, выдаёт ошибку, но работает, разобраться. Махров В.Д.
     sQuery = "(host:" + IP + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
@@ -420,7 +360,8 @@ def services_IP(IP):
                     if 'location' in header:
                         locs = header['location']
                         for loc in locs:
-                            print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(sc) + ', Redirected to: ' + loc)
+                            print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(
+                                sc) + ', Redirected to: ' + loc)
                 else:
                     print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(sc))
 
@@ -477,7 +418,7 @@ def services_IP(IP):
                     if mark == 1:
                         print(str(url))
 
-            print('////////')
+        # print('////////')
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
 
@@ -511,23 +452,16 @@ def whois_info(IP):  # Will be done later
     pass
 
 
-# нужна ли?
-def call_from_results(s):
-    if is_uri(s):
-        print("URI\n")
-    elif is_domain(s):
-        domain_research(s)
-    elif is_ip(s):
-        IP_research(s)
-    elif is_subnet(s):
-        print("subnet\n")
-    elif is_as(s):
-        print("AS\n")
+def IP_research(IP):
+    URI_search(IP)  # Ports and protocols just as targets
+    whois_info(IP)  # Subnets, AS and whois stuff
+    services_IP(IP)
+    G.nodes[f'{IP}']['Checked'] = True
 
 
 def enter_api_key():
     for i in args:
-        if is_flags(i) == 0:
+        if ch.is_flags(i) == 0:
             global api_key
             api_key = i
             with open('config', 'w') as f:
@@ -543,42 +477,24 @@ def parse_flags(flags):
             enter_api_key()
 
 
-api_key = ''
-args = parse_args(sys.argv)
-for i in args:
-    if is_flags(i):
-        parse_flags(i)
-
-if api_key != '':
-    sys.exit()
-
-f = open('config')
-api_key = f.read()
-if api_key == '':
-    print('Enter your Netlas API key')
-    sys.exit()
-else:
-    netlas_connection = netlas.Netlas(api_key=api_key)
-
-
-def Finder(args):
-    for arg in args:
-        if is_uri(arg):
+def Finder(arguments):
+    for arg in arguments:
+        if ch.is_uri(arg):
             print("URI\n")
             break
-        elif is_domain(arg):
+        elif ch.is_domain(arg):
             domain_research(arg)
             break
-        elif is_ip(arg):
+        elif ch.is_ip(arg):
             IP_research(arg)
             break
-        elif is_subnet(arg):
+        elif ch.is_subnet(arg):
             print("subnet\n")
             break
-        elif is_as(arg):
+        elif ch.is_as(arg):
             print("AS\n")
             break
-        elif is_flags(arg):
+        elif ch.is_flags(arg):
             continue
         else:
             print(arg, 'is not a valid target')
@@ -595,10 +511,10 @@ def Dispatcher(depth=3):
             if tmp[0] == '':
                 break
             # для дальнейшего развития: для поддоменов стоит искать только записи.
-            if is_domain(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
+            if ch.is_domain(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
                 direct_dns_records(tmp[1])
                 G.nodes[f'{tmp[1]}']['Checked'] = True
-            if is_ip(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
+            if ch.is_ip(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
                 IP_research(tmp[1])
                 G.nodes[f'{tmp[1]}']['Checked'] = True
 
@@ -611,16 +527,34 @@ def Dispatcher(depth=3):
 
 
 if __name__ == "__main__":
+    api_key = ''
+    args = parse_args(sys.argv)
+
+    for i in args:
+        if ch.is_flags(i):
+            parse_flags(i)
+
+    if api_key != '':
+        sys.exit()
+
+    with open('config') as f:
+        api_key = f.read()
+        if api_key == '':
+            print('Enter your Netlas API key')
+            sys.exit()
+        else:
+            netlas_connection = netlas.Netlas(api_key=api_key)
+    t1 = time.time_ns()
     Finder(args)
     with open('test.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print("Dispatcher was launched")
-    Dispatcher(3)
-
+    Dispatcher(DEPTH_OF_SEARCH)
+    t2 = time.time_ns()
     with open('test.edgelist', 'r') as f:
         print(*f.readlines())
     print(G)
-
+    print(f"Вычисление заняло {(t2 - t1)/1e9:0.3f} секунд")
 # Graphical output of the graph
 #  nx.draw_networkx(G)
 #  plt.show()  # necessary
