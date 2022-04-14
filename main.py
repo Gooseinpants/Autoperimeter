@@ -79,10 +79,18 @@ def services_dom(domain_name):
                 else:
                     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc))
 
+            # Поиск по g-тэгам
+            if 'tag' in data:
+                tags = data['tag']
+                for tag in tags:
+                    if 'google_tag_manager' in tag:
+                        body = http['body']
+                        # google_tags(str(body)) - закоментированно до тех пор, пока не разберусь с добавлением в граф,
+                        # так-то работает. Махров В.Д.
+
             # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
             # и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
             if 'body' in http:
-                # print('Links on service:')
                 body = http['body']
                 extractor = URLExtract()
                 urls = extractor.find_urls(body, check_dns=True)
@@ -132,35 +140,27 @@ def services_dom(domain_name):
                         mark = 0
 
                     if mark == 1:
-                        # print(str(url))
-
                         # 12.04.22 - поиск перекрёстных ссылок. Регулярные выражения это не мой случай. Махров В.Д.
                         index = str(url).find("www.")
                         if index != -1:
-                            # print('www.: ' + str(index))
                             index_save = index + 4
                             index = str(url).find("/", index_save)
                             if index != -1:
                                 new_dom = str(url)[index_save:index]
                             else:
                                 new_dom = str(url)[index_save:]
-                            # print('Domain for cross-links: ' + norm_url)
                         else:
                             index = str(url).find("://")
-                            # print('//: ' + str(index))
                             index_save = index + 3
                             index = str(url).find("/", index_save)
                             if index != -1:
                                 new_dom = str(url)[index_save:index]
                             else:
                                 new_dom = str(url)[index_save:]
-                            # print('Domain for cross-links: ' + norm_url)
 
                         mark = cross_links(new_dom, domain_name)
                         if mark == 1:
                             print('Has cross-links with main domain: ' + new_dom)
-
-            # print('////////')
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -192,7 +192,7 @@ def direct_dns_records(domain_name):
                     cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
                     if cnt_of_res2['count'] > 30:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=False)
-                        G.nodes[f'{a}']['Checked'] = True  # нужно ли дальше исследовать такой айпи?
+                        G.nodes[f'{a}']['Checked'] = True  # нужно ли дальше исследовать такой айпи? - Я думаю, нет. Даже уверен в этом)
                     else:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=True)
                         check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
@@ -282,6 +282,34 @@ def domain_research(domain_name):
     services_dom(domain_name)
 
 
+def google_tags(body):
+    #Поиск сервисов с одинаковым google-тэгом
+    index = body.find("GTM-")
+    if index != -1:
+        index2 = index + 11
+    else:
+        return
+
+    tag = body[index:index2]
+
+    sQuery = "(tag.google_tag_manager:*) AND (http.body:" + tag + ")"
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
+    number_of_page = 0
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
+        items = query_res['items']
+        for item in items:
+            data = item['data']
+            http = data['http']
+            uri = data['uri']
+            header = http['headers']
+
+            #print('Service with same g-tag: ' + uri) - print для отладки, здесь нужно добавлять в граф
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
+
+
 def cross_links(domain_name, domain_name_orig):
     result = 0
     finisheds = 0
@@ -292,15 +320,8 @@ def cross_links(domain_name, domain_name_orig):
         query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
         items = query_res['items']
         for item in items:
-
-            # print('///////////')
-            # print(json.dumps(item, sort_keys=True, indent=4))
-            # print('///////////')
-
             data = item['data']
             http = data['http']
-            # uri = data['uri']
-            # header = http['headers']
 
             if 'status_code' in http:
                 sc = http['status_code']
@@ -323,7 +344,6 @@ def cross_links(domain_name, domain_name_orig):
                                 result = 1
                                 return result
 
-                    # print('////////')
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
         finisheds += 20
@@ -341,11 +361,6 @@ def services_IP(IP):
         query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
         items = query_res['items']
         for item in items:
-
-            # print('///////////')
-            # print(json.dumps(item, sort_keys=True, indent=4))
-            # print('///////////')
-
             data = item['data']
             http = data['http']
             uri = data['uri']
@@ -418,7 +433,6 @@ def services_IP(IP):
                     if mark == 1:
                         print(str(url))
 
-        # print('////////')
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
 
