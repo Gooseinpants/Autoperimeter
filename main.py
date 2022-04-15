@@ -9,34 +9,12 @@ import matplotlib.pyplot as plt
 import json
 
 import check as ch
+import service as sv
 
 DEPTH_OF_SEARCH = 3
-
-
-def print_help():
-    print("Usage: python3 main.py [flags] [target] \n")
-    print("Target specification: Domain names or IP-addresses\n")
-    print("Flags:")
-    print("    -h: Print this page")
-    print("    -c: Enter Netlas API key: main.py -c \'API key\'")
-
-
-def parse_args(argv):
-    if len(argv) == 1:
-        print("Please enter search parameters")
-        sys.exit()
-    elif argv[1][0] != '-':
-        args = [argv[1]]
-        print("arg = ", args[0])
-    elif len(argv) == 2:
-        args = [argv[1]]
-        print("flags = ", args[0])
-    else:
-        args = [argv[1], argv[2]]
-        print("flags = ", args[0])
-        print("arg = ", args[1])
-    return args
-
+CERTAINLY = 1
+PROBABLY = 0.5
+UNLIKELY = 0.2
 
 G = nx.DiGraph()  # Our main graph
 
@@ -47,6 +25,13 @@ def check_and_add_Descr(graph, u_node, v_node, msg):
                                                              'Description'] + msg
     else:
         graph[f'{u_node}'][f'{v_node}']['Description'] = msg
+
+
+def check_and_add_Weight(graph, node, weight):
+    if 'Scope' in graph.nodes[f'{node}']:
+        graph.nodes[f'{node}']['Scope'] = graph.nodes[f'{node}']['Scope'] + weight
+    else:
+        graph.nodes[f'{node}']['Scope'] = weight
 
 
 def services_dom(domain_name):
@@ -192,7 +177,7 @@ def direct_dns_records(domain_name):
                     cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
                     if cnt_of_res2['count'] > 30:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=False)
-                        G.nodes[f'{a}']['Checked'] = True  # нужно ли дальше исследовать такой айпи? - Я думаю, нет. Даже уверен в этом)
+                        G.nodes[f'{a}']['Checked'] = True
                     else:
                         G.add_edge(f'{domain_name}', f'{a}', a_record=True)
                         check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
@@ -244,7 +229,9 @@ def subdomains(domain_name):  # *.domain.name
             G.add_edge(f'{domain_name}', f'{subdomain}', subdomain=True)
 
             check_and_add_Descr(G, domain_name, subdomain, f'This is a subdomain of the {domain_name} domain. ')
-            G.nodes[f'{subdomain}']['Checked'] = False
+            check_and_add_Weight(G, subdomain, CERTAINLY)
+            if 'Checked' not in G.nodes[f'{subdomain}']:
+                G.nodes[f'{subdomain}']['Checked'] = False
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -267,9 +254,10 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
             # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
             # он её проходит. Махров В.Д.
             G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
-
             check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
-            G.nodes[f'{side_domain}']['Checked'] = False
+            if 'Checked' not in G.nodes[f'{side_domain}']:
+                G.nodes[f'{side_domain}']['Checked'] = False
+            G.nodes[f'{side_domain}']['side_domain'] = True
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -283,7 +271,7 @@ def domain_research(domain_name):
 
 
 def google_tags(body):
-    #Поиск сервисов с одинаковым google-тэгом
+    # Поиск сервисов с одинаковым google-тэгом
     index = body.find("GTM-")
     if index != -1:
         index2 = index + 11
@@ -304,7 +292,7 @@ def google_tags(body):
             uri = data['uri']
             header = http['headers']
 
-            #print('Service with same g-tag: ' + uri) - print для отладки, здесь нужно добавлять в граф
+            # print('Service with same g-tag: ' + uri) - print для отладки, здесь нужно добавлять в граф
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -473,33 +461,17 @@ def IP_research(IP):
     G.nodes[f'{IP}']['Checked'] = True
 
 
-def enter_api_key():
-    for i in args:
-        if ch.is_flags(i) == 0:
-            global api_key
-            api_key = i
-            with open('config', 'w') as f:
-                f.write(i)
-            break
-
-
-def parse_flags(flags):
-    for i in flags:
-        if i == 'h':
-            print_help()
-        elif i == 'c':
-            enter_api_key()
-
-
 def Finder(arguments):
     for arg in arguments:
         if ch.is_uri(arg):
             print("URI\n")
             break
         elif ch.is_domain(arg):
+            G.add_node(f'{arg}', Scope=CERTAINLY)
             domain_research(arg)
             break
         elif ch.is_ip(arg):
+            G.add_node(f'{arg}', Scope=CERTAINLY)
             IP_research(arg)
             break
         elif ch.is_subnet(arg):
@@ -517,6 +489,8 @@ def Finder(arguments):
 
 def Dispatcher(depth=3):
     if depth == 0:
+        with open('copy_test.edgelist', 'wb') as f_copy:
+            nx.write_edgelist(G, f_copy)
         return
     print(f'In dispatcher. {depth} iteration')
     with open('test.edgelist', 'r') as f:
@@ -526,7 +500,10 @@ def Dispatcher(depth=3):
                 break
             # для дальнейшего развития: для поддоменов стоит искать только записи.
             if ch.is_domain(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
-                direct_dns_records(tmp[1])
+                if 'side_domain' in G.nodes[f'{tmp[1]}'] and G.nodes[f'{tmp[1]}']['side_domain'] is True:
+                    domain_research(tmp[1])
+                else:
+                    direct_dns_records(tmp[1])
                 G.nodes[f'{tmp[1]}']['Checked'] = True
             if ch.is_ip(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
                 IP_research(tmp[1])
@@ -540,24 +517,40 @@ def Dispatcher(depth=3):
     Dispatcher(depth - 1)
 
 
+def Analyser():
+    with open('test.edgelist', 'r') as f:
+        while True:
+            tmp = f.readline().split(' ')
+            if tmp[0] == '':
+                break
+            with open('copy_test.edgelist', 'r') as f_copy:
+                while True:
+                    tmp_copy = f_copy.readline().split(' ')
+                    if tmp_copy[0] == '':
+                        break
+
+                    if ch.is_domain(tmp_copy[1]) == 1:
+                        source = tmp_copy[0]
+
+
 if __name__ == "__main__":
     api_key = ''
-    args = parse_args(sys.argv)
+    args = sv.parse_args(sys.argv)
 
     for i in args:
         if ch.is_flags(i):
-            parse_flags(i)
-
+            api_key = sv.parse_flags(i, args, api_key)
     if api_key != '':
         sys.exit()
 
-    with open('config') as f:
+    with open('config', 'r') as f:
         api_key = f.read()
         if api_key == '':
             print('Enter your Netlas API key')
             sys.exit()
         else:
             netlas_connection = netlas.Netlas(api_key=api_key)
+
     t1 = time.time_ns()
     Finder(args)
     with open('test.edgelist', 'wb') as f:
@@ -565,17 +558,26 @@ if __name__ == "__main__":
     print("Dispatcher was launched")
     Dispatcher(DEPTH_OF_SEARCH)
     t2 = time.time_ns()
+
     with open('test.edgelist', 'r') as f:
         print(*f.readlines())
-    print(G)
-    print(f"Вычисление заняло {(t2 - t1)/1e9:0.3f} секунд")
-# Graphical output of the graph
-#  nx.draw_networkx(G)
-#  plt.show()  # necessary
 
+    with open('result.txt', 'w') as f:
+        print('In scope for sure:', file=f)
+        for n in G:
+            if 'Scope' in G.nodes[f'{n}'] and G.nodes[f'{n}']['Scope'] >= 1:
+                print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
+        print('Probably in scope:', file=f)
+        for n in G:
+            if 'Scope' in G.nodes[f'{n}'] and 0.5 <= G.nodes[f'{n}']['Scope'] < 1:
+                print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
+    print(G)
+    print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
+    # Graphical output of the graph
+    #  nx.draw_networkx(G)
+    #  plt.show()  # necessary
 
 # возможные взаимосвяи:
-# поддомены точно входят в скоуп.
 # в тхт записях поискать домены и айпи. Они будут входить в скоуп.
 # Если есть перекрёстные ссылки на сайтах, то они входят в скоуп.
 # Если у доменов/поддоменов и тд общая mx- запись, то входит в скоуп

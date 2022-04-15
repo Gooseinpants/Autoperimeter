@@ -1,0 +1,650 @@
+acribia.ru ['v=spf1 ip4:81.29.134.163 include:_spf.google.com ~all'] {'txt_record': True, 'Description': 'This is a txt-record received from acribia.ru. '}
+acribia.ru 185.215.4.10 {'a_record': False}
+acribia.ru mail-gw.acribia.ru {'mx_record': True, 'Description': 'This is an mx-record received from acribia.ru. This is a subdomain of the acribia.ru domain. ', 'subdomain': True}
+acribia.ru mail.acribia.ru {'mx_record': True, 'Description': 'This is an mx-record received from acribia.ru. This is a subdomain of the acribia.ru domain. ', 'subdomain': True}
+acribia.ru cdn.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru mail-msk01.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru telegrambot.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru autodiscover.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru www.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru en.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru kyy.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru www.en.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru cw.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru wiki.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru proget.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru xmpp.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru soc.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru bravo.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru voip.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru alert.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru tets.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+acribia.ru acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ru domain. '}
+mail-gw.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from mail-gw.acribia.ru. '}
+mail.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from mail.acribia.ru. '}
+cdn.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from cdn.acribia.ru. '}
+autodiscover.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from autodiscover.acribia.ru. '}
+autodiscover.acribia.ru mail.acribia.ru {'cname_record': True, 'Description': 'This is a cname-record received from autodiscover.acribia.ru. '}
+www.acribia.ru 185.215.4.10 {'a_record': False}
+en.acribia.ru ['google-site-verification=DdQTlXtlLTzDtghKAbF2PS6FfVXV0_Vkg63plEo-JCs'] {'txt_record': True, 'Description': 'This is a txt-record received from en.acribia.ru. '}
+en.acribia.ru 185.215.4.10 {'a_record': False}
+wiki.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from wiki.acribia.ru. '}
+soc.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from soc.acribia.ru. '}
+bravo.acribia.ru 81.29.134.165 {'a_record': True, 'Description': 'This is an a-record received from bravo.acribia.ru. '}
+alert.acribia.ru ['v=spf1 include:spf.mailjet.com ?all'] {'txt_record': True, 'Description': 'This is a txt-record received from alert.acribia.ru. '}
+alert.acribia.ru 81.29.134.164 {'a_record': True, 'Description': 'This is an a-record received from alert.acribia.ru. '}
+alert.acribia.ru alert.acribia.ru {'mx_record': True, 'Description': 'This is an mx-record received from alert.acribia.ru. '}
+acribia.group ['v=spf1 redirect=_spf.yandex.net', 'yandex-verification: 0bfdc5dd75e19bec'] {'txt_record': True, 'Description': 'This is a txt-record received from acribia.group. '}
+acribia.group ns8-l2.nic.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.group. '}
+acribia.group ns3-l2.nic.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.group. '}
+acribia.group ns4-cloud.nic.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.group. '}
+acribia.group ns4-l2.nic.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.group. '}
+acribia.group ns8-cloud.nic.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.group. '}
+acribia.group acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.group acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.group domain. '}
+acribia.publica.la 13.248.160.216 {'a_record': False}
+acribia.publica.la 76.223.34.22 {'a_record': False}
+acribia.publica.la ad83420ef3101bf80.awsglobalaccelerator.com {'cname_record': True, 'Description': 'This is a cname-record received from acribia.publica.la. '}
+acribia.publica.la acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.publica.la acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.publica.la domain. '}
+acribia.site acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.site acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.site domain. '}
+acribia.it 62.149.128.154 {'a_record': False}
+acribia.it 62.149.128.157 {'a_record': False}
+acribia.it 62.149.128.151 {'a_record': False}
+acribia.it 62.149.128.160 {'a_record': False}
+acribia.it 62.149.128.163 {'a_record': False}
+acribia.it 62.149.128.166 {'a_record': False}
+acribia.it dns2.technorail.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.it. '}
+acribia.it dns3.arubadns.net {'ns_record': True, 'Description': 'This is an ns-record received from acribia.it. '}
+acribia.it dns.technorail.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.it. '}
+acribia.it dns4.arubadns.cz {'ns_record': True, 'Description': 'This is an ns-record received from acribia.it. '}
+acribia.it acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.it acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.it domain. '}
+acribia.swiss 212.123.41.108 {'a_record': False}
+acribia.swiss acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.swiss acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.swiss domain. '}
+acribia.online 62.149.128.163 {'a_record': False}
+acribia.online 62.149.128.151 {'a_record': False}
+acribia.online 62.149.128.166 {'a_record': False}
+acribia.online 62.149.128.160 {'a_record': False}
+acribia.online 62.149.128.154 {'a_record': False}
+acribia.online 62.149.128.157 {'a_record': False}
+acribia.online mx.acribia.online {'mx_record': True, 'Description': 'This is an mx-record received from acribia.online. This is a subdomain of the acribia.online domain. ', 'subdomain': True}
+acribia.online acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.online acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.online domain. '}
+acribia.com.bo www.acribia.com.bo {'subdomain': True, 'Description': 'This is a subdomain of the acribia.com.bo domain. '}
+acribia.com.bo cpanel.acribia.com.bo {'subdomain': True, 'Description': 'This is a subdomain of the acribia.com.bo domain. '}
+acribia.com.bo webmail.acribia.com.bo {'subdomain': True, 'Description': 'This is a subdomain of the acribia.com.bo domain. '}
+acribia.com.bo autodiscover.acribia.com.bo {'subdomain': True, 'Description': 'This is a subdomain of the acribia.com.bo domain. '}
+acribia.com.bo mail.acribia.com.bo {'subdomain': True, 'Description': 'This is a subdomain of the acribia.com.bo domain. '}
+acribia.com.bo webdisk.acribia.com.bo {'subdomain': True, 'Description': 'This is a subdomain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.com.bo acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.com.bo domain. '}
+acribia.cloud 62.149.128.160 {'a_record': False}
+acribia.cloud 62.149.128.151 {'a_record': False}
+acribia.cloud 62.149.128.166 {'a_record': False}
+acribia.cloud 62.149.128.157 {'a_record': False}
+acribia.cloud 62.149.128.154 {'a_record': False}
+acribia.cloud 62.149.128.163 {'a_record': False}
+acribia.cloud dns.technorail.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.cloud. '}
+acribia.cloud dns4.arubadns.cz {'ns_record': True, 'Description': 'This is an ns-record received from acribia.cloud. '}
+acribia.cloud dns2.technorail.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.cloud. '}
+acribia.cloud dns3.arubadns.net {'ns_record': True, 'Description': 'This is an ns-record received from acribia.cloud. '}
+acribia.cloud mx.acribia.cloud {'subdomain': True, 'Description': 'This is a subdomain of the acribia.cloud domain. '}
+acribia.cloud acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.cloud acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.cloud domain. '}
+acribia.shop www.acribia.shop {'subdomain': True, 'Description': 'This is a subdomain of the acribia.shop domain. '}
+acribia.shop acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.shop acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.shop domain. '}
+acribia.ca www.acribia.ca {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ca domain. '}
+acribia.ca acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.ca acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ca domain. '}
+acribia.es dns13.servidoresdns.net {'ns_record': True, 'Description': 'This is an ns-record received from acribia.es. '}
+acribia.es dns14.servidoresdns.net {'ns_record': True, 'Description': 'This is an ns-record received from acribia.es. '}
+acribia.es aspmx.l.google.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.es. '}
+acribia.es alt1.aspmx.l.google.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.es. '}
+acribia.es aspmx2.googlemail.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.es. '}
+acribia.es alt2.aspmx.l.google.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.es. '}
+acribia.es aspmx3.googlemail.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.es. '}
+acribia.es acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.es acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.es domain. '}
+acribia.info 62.149.128.160 {'a_record': False}
+acribia.info 62.149.128.154 {'a_record': False}
+acribia.info 62.149.128.151 {'a_record': False}
+acribia.info 62.149.128.163 {'a_record': False}
+acribia.info 62.149.128.166 {'a_record': False}
+acribia.info 62.149.128.157 {'a_record': False}
+acribia.info mx.acribia.info {'subdomain': True, 'Description': 'This is a subdomain of the acribia.info domain. '}
+acribia.info acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.info acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.info domain. '}
+acribia.net 87.98.247.3 {'a_record': False}
+acribia.net www.acribia.net {'subdomain': True, 'Description': 'This is a subdomain of the acribia.net domain. '}
+acribia.net acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.net acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.net domain. '}
+acribia.eco ['v=spf1 mx ~all'] {'txt_record': True, 'Description': 'This is a txt-record received from acribia.eco. '}
+acribia.eco 52.33.207.7 {'a_record': False}
+acribia.eco 44.230.85.241 {'a_record': False}
+acribia.eco fortaleza.porkbun.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eco. '}
+acribia.eco salvador.porkbun.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eco. '}
+acribia.eco curitiba.porkbun.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eco. '}
+acribia.eco maceio.porkbun.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eco. '}
+acribia.eco fwd2.porkbun.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.eco. '}
+acribia.eco fwd1.porkbun.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.eco. '}
+acribia.eco acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.eco acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eco domain. '}
+acribia.crmcloud.online 185.66.200.67 {'a_record': False}
+acribia.crmcloud.online www.acribia.crmcloud.online {'subdomain': True, 'Description': 'This is a subdomain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.crmcloud.online acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.crmcloud.online domain. '}
+acribia.eu ['v=spf1 include:servers.mcsv.net include:spf.protection.outlook.com -all', 'google-site-verification=D3jP_HbHuNpIf_W6fM2TDcWBVz0t4cZToYYL_LPdhVo'] {'txt_record': True, 'Description': 'This is a txt-record received from acribia.eu. '}
+acribia.eu 23.236.62.147 {'a_record': False}
+acribia.eu dns4.arubadns.cz {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eu. '}
+acribia.eu dns2.technorail.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eu. '}
+acribia.eu dns.technorail.com {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eu. '}
+acribia.eu dns3.arubadns.net {'ns_record': True, 'Description': 'This is an ns-record received from acribia.eu. '}
+acribia.eu acribia-eu.mail.protection.outlook.com {'mx_record': True, 'Description': 'This is an mx-record received from acribia.eu. '}
+acribia.eu crm19.acribia.eu {'subdomain': True, 'Description': 'This is a subdomain of the acribia.eu domain. '}
+acribia.eu www.acribia.eu {'subdomain': True, 'Description': 'This is a subdomain of the acribia.eu domain. '}
+acribia.eu chat.acribia.eu {'subdomain': True, 'Description': 'This is a subdomain of the acribia.eu domain. '}
+acribia.eu acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.eu acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.eu domain. '}
+acribia.pt 109.71.40.129 {'a_record': False}
+acribia.pt mail.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt webmail.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt cpcontacts.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt cpcalendars.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt webdisk.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt www.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt cpanel.acribia.pt {'subdomain': True, 'Description': 'This is a subdomain of the acribia.pt domain. '}
+acribia.pt acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.pt acribia.ch {'side_domain': True, 'Description': 'This is a side-domain of the acribia.pt domain. '}
+acribia.ch ['MS=ms78175131', 'v=spf1 ip4:83.173.245.74 include:_spf.in4out.ch -all'] {'txt_record': True, 'Description': 'This is a txt-record received from acribia.ch. '}
+acribia.ch 185.178.193.251 {'a_record': False}
+acribia.ch ns1.in4out.ch {'ns_record': True, 'Description': 'This is an ns-record received from acribia.ch. '}
+acribia.ch ns2.in4out.ch {'ns_record': True, 'Description': 'This is an ns-record received from acribia.ch. '}
+acribia.ch smtp01.acribia.ch {'mx_record': True, 'Description': 'This is an mx-record received from acribia.ch. This is a subdomain of the acribia.ch domain. ', 'subdomain': True}
+acribia.ch webmail.acribia.ch {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ch domain. '}
+acribia.ch citrix.acribia.ch {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ch domain. '}
+acribia.ch www.acribia.ch {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ch domain. '}
+acribia.ch mail.acribia.ch {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ch domain. '}
+acribia.ch nextcloud.acribia.ch {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ch domain. '}
+acribia.ch webtreuhand.acribia.ch {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ch domain. '}
+acribia.ch acribia.group {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.publica.la {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.site {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.it {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.swiss {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.com.bo {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.cloud {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.shop {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.ca {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.es {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.info {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.net {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.eco {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.crmcloud.online {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.ru {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.eu {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+acribia.ch acribia.pt {'side_domain': True, 'Description': 'This is a side-domain of the acribia.ch domain. '}
+81.29.134.163 smtp://81.29.134.163:25 {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 smtpstarttls://81.29.134.163:25 {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 http://81.29.134.163/ {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 imaps://81.29.134.163:993 {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 https://81.29.134.163/ {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+ns8-l2.nic.ru 91.217.21.1 {'a_record': False}
+ns8-l2.nic.ru nomail.nic.ru {'mx_record': True, 'Description': 'This is an mx-record received from ns8-l2.nic.ru. '}
+ns3-l2.nic.ru 193.232.146.1 {'a_record': False}
+ns3-l2.nic.ru nomail.nic.ru {'mx_record': True, 'Description': 'This is an mx-record received from ns3-l2.nic.ru. '}
+ns4-cloud.nic.ru 91.217.20.1 {'a_record': False}
+ns4-cloud.nic.ru nomail.nic.ru {'mx_record': True, 'Description': 'This is an mx-record received from ns4-cloud.nic.ru. '}
+ns4-l2.nic.ru 91.217.20.1 {'a_record': False}
+ns8-cloud.nic.ru 91.217.21.1 {'a_record': False}
+ns8-cloud.nic.ru nomail.nic.ru {'mx_record': True, 'Description': 'This is an mx-record received from ns8-cloud.nic.ru. '}
+ad83420ef3101bf80.awsglobalaccelerator.com 76.223.34.22 {'a_record': False}
+ad83420ef3101bf80.awsglobalaccelerator.com 13.248.160.216 {'a_record': False}
+dns2.technorail.com 95.110.136.8 {'a_record': True, 'Description': 'This is an a-record received from dns2.technorail.com. '}
+dns3.arubadns.net 95.110.220.5 {'a_record': True, 'Description': 'This is an a-record received from dns3.arubadns.net. '}
+dns.technorail.com 94.177.210.13 {'a_record': True, 'Description': 'This is an a-record received from dns.technorail.com. '}
+dns4.arubadns.cz 81.2.216.125 {'a_record': True, 'Description': 'This is an a-record received from dns4.arubadns.cz. '}
+mx.acribia.online 62.149.128.160 {'a_record': False}
+mx.acribia.online 62.149.128.157 {'a_record': False}
+mx.acribia.online 62.149.128.166 {'a_record': False}
+mx.acribia.online 62.149.128.154 {'a_record': False}
+mx.acribia.online 62.149.128.163 {'a_record': False}
+mx.acribia.online 62.149.128.151 {'a_record': False}
+mx.acribia.cloud 62.149.128.160 {'a_record': False}
+mx.acribia.cloud 62.149.128.157 {'a_record': False}
+mx.acribia.cloud 62.149.128.154 {'a_record': False}
+mx.acribia.cloud 62.149.128.166 {'a_record': False}
+mx.acribia.cloud 62.149.128.163 {'a_record': False}
+mx.acribia.cloud 62.149.128.151 {'a_record': False}
+dns13.servidoresdns.net 217.76.128.134 {'a_record': True, 'Description': 'This is an a-record received from dns13.servidoresdns.net. '}
+dns14.servidoresdns.net 82.223.218.138 {'a_record': True, 'Description': 'This is an a-record received from dns14.servidoresdns.net. '}
+aspmx.l.google.com 142.250.113.26 {'a_record': True, 'Description': 'This is an a-record received from aspmx.l.google.com. '}
+alt1.aspmx.l.google.com 172.217.197.27 {'a_record': False}
+aspmx2.googlemail.com 64.233.184.26 {'a_record': False}
+alt2.aspmx.l.google.com 172.253.113.27 {'a_record': True, 'Description': 'This is an a-record received from alt2.aspmx.l.google.com. '}
+aspmx3.googlemail.com 172.253.113.26 {'a_record': True, 'Description': 'This is an a-record received from aspmx3.googlemail.com. '}
+mx.acribia.info 62.149.128.163 {'a_record': False}
+mx.acribia.info 62.149.128.151 {'a_record': False}
+mx.acribia.info 62.149.128.160 {'a_record': False}
+mx.acribia.info 62.149.128.154 {'a_record': False}
+mx.acribia.info 62.149.128.157 {'a_record': False}
+mx.acribia.info 62.149.128.166 {'a_record': False}
+www.acribia.net ['v=spf1 include:mx.ovh.com ~all'] {'txt_record': True, 'Description': 'This is a txt-record received from www.acribia.net. '}
+www.acribia.net 87.98.247.3 {'a_record': False}
+www.acribia.net ns101.ovh.net {'ns_record': True, 'Description': 'This is an ns-record received from www.acribia.net. '}
+www.acribia.net dns101.ovh.net {'ns_record': True, 'Description': 'This is an ns-record received from www.acribia.net. '}
+www.acribia.net mx1.ovh.net {'mx_record': True, 'Description': 'This is an mx-record received from www.acribia.net. '}
+www.acribia.net mx2.ovh.net {'mx_record': True, 'Description': 'This is an mx-record received from www.acribia.net. '}
+www.acribia.net mxb.ovh.net {'mx_record': True, 'Description': 'This is an mx-record received from www.acribia.net. '}
+www.acribia.net acribia.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.net. '}
+fortaleza.porkbun.com 3.224.31.177 {'a_record': True, 'Description': 'This is an a-record received from fortaleza.porkbun.com. '}
+fortaleza.porkbun.com 52.73.191.223 {'a_record': True, 'Description': 'This is an a-record received from fortaleza.porkbun.com. '}
+salvador.porkbun.com 44.229.234.37 {'a_record': True, 'Description': 'This is an a-record received from salvador.porkbun.com. '}
+salvador.porkbun.com 52.24.239.56 {'a_record': True, 'Description': 'This is an a-record received from salvador.porkbun.com. '}
+curitiba.porkbun.com 44.229.234.37 {'a_record': True, 'Description': 'This is an a-record received from curitiba.porkbun.com. '}
+curitiba.porkbun.com 52.24.239.56 {'a_record': True, 'Description': 'This is an a-record received from curitiba.porkbun.com. '}
+maceio.porkbun.com 3.224.31.177 {'a_record': True, 'Description': 'This is an a-record received from maceio.porkbun.com. '}
+maceio.porkbun.com 52.73.191.223 {'a_record': True, 'Description': 'This is an a-record received from maceio.porkbun.com. '}
+fwd2.porkbun.com 52.10.201.111 {'a_record': True, 'Description': 'This is an a-record received from fwd2.porkbun.com. '}
+fwd1.porkbun.com 52.10.174.57 {'a_record': True, 'Description': 'This is an a-record received from fwd1.porkbun.com. '}
+www.acribia.crmcloud.online 185.66.200.67 {'a_record': False}
+crm19.acribia.eu 93.186.245.202 {'a_record': True, 'Description': 'This is an a-record received from crm19.acribia.eu. '}
+www.acribia.eu 199.15.163.148 {'a_record': False}
+www.acribia.eu www43.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu balancer.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu f7a0737a-balancer.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu td-balancer-199-15-163-148.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu 0819ceda-balancer.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu td-balancer-199-15-163-128.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu e2e8cd89-balancer.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu td-balancer-dc11-60-102.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu 20784cd2-balancer.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+www.acribia.eu td-balancer-euw3-251-130.wixdns.net {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.eu. '}
+chat.acribia.eu 93.186.245.202 {'a_record': True, 'Description': 'This is an a-record received from chat.acribia.eu. '}
+mail.acribia.pt ['v=spf1 ip4:109.71.40.107 +a +mx +ip4:109.71.40.33 +ip4:109.71.40.129 +include:_spf.cleanmx.pt -all'] {'txt_record': True, 'Description': 'This is a txt-record received from mail.acribia.pt. '}
+mail.acribia.pt 109.71.40.129 {'a_record': False}
+mail.acribia.pt ns7.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from mail.acribia.pt. '}
+mail.acribia.pt ns8.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from mail.acribia.pt. '}
+mail.acribia.pt ns2.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from mail.acribia.pt. '}
+mail.acribia.pt ns1.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from mail.acribia.pt. '}
+mail.acribia.pt acribia.pt {'cname_record': True, 'Description': 'This is a cname-record received from mail.acribia.pt. '}
+webmail.acribia.pt 109.71.40.129 {'a_record': False}
+cpcontacts.acribia.pt 109.71.40.129 {'a_record': False}
+cpcalendars.acribia.pt 109.71.40.129 {'a_record': False}
+webdisk.acribia.pt 109.71.40.129 {'a_record': False}
+www.acribia.pt ['v=spf1 ip4:109.71.40.107 +a +mx +ip4:109.71.40.33 +ip4:109.71.40.129 +include:_spf.cleanmx.pt -all'] {'txt_record': True, 'Description': 'This is a txt-record received from www.acribia.pt. '}
+www.acribia.pt 109.71.40.129 {'a_record': False}
+www.acribia.pt ns7.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from www.acribia.pt. '}
+www.acribia.pt ns8.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from www.acribia.pt. '}
+www.acribia.pt ns2.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from www.acribia.pt. '}
+www.acribia.pt ns1.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from www.acribia.pt. '}
+www.acribia.pt mx2.cleanmx.pt {'mx_record': True, 'Description': 'This is an mx-record received from www.acribia.pt. '}
+www.acribia.pt mx1.cleanmx.pt {'mx_record': True, 'Description': 'This is an mx-record received from www.acribia.pt. '}
+www.acribia.pt acribia.pt {'cname_record': True, 'Description': 'This is a cname-record received from www.acribia.pt. '}
+cpanel.acribia.pt 109.71.40.129 {'a_record': False}
+ns1.in4out.ch 83.144.230.4 {'a_record': True, 'Description': 'This is an a-record received from ns1.in4out.ch. '}
+ns2.in4out.ch 195.49.22.136 {'a_record': True, 'Description': 'This is an a-record received from ns2.in4out.ch. '}
+smtp01.acribia.ch 83.144.230.6 {'a_record': False}
+webmail.acribia.ch 83.173.245.74 {'a_record': True, 'Description': 'This is an a-record received from webmail.acribia.ch. '}
+www.acribia.ch 185.178.193.251 {'a_record': False}
+mail.acribia.ch 83.173.245.74 {'a_record': True, 'Description': 'This is an a-record received from mail.acribia.ch. '}
+nextcloud.acribia.ch 83.144.230.129 {'a_record': True, 'Description': 'This is an a-record received from nextcloud.acribia.ch. '}
+webtreuhand.acribia.ch 83.173.245.76 {'a_record': True, 'Description': 'This is an a-record received from webtreuhand.acribia.ch. '}
+nomail.nic.ru 127.0.0.1 {'a_record': False}
+142.250.113.26 smtpstarttls://142.250.113.26:25 {'URI': True, 'Description': 'This is an URI received from 142.250.113.26. '}
+142.250.113.26 smtp://142.250.113.26:25 {'URI': True, 'Description': 'This is an URI received from 142.250.113.26. '}
+172.253.113.27 smtp://172.253.113.27:25 {'URI': True, 'Description': 'This is an URI received from 172.253.113.27. '}
+172.253.113.27 smtpstarttls://172.253.113.27:25 {'URI': True, 'Description': 'This is an URI received from 172.253.113.27. '}
+172.253.113.26 smtp://172.253.113.26:25 {'URI': True, 'Description': 'This is an URI received from 172.253.113.26. '}
+172.253.113.26 smtpstarttls://172.253.113.26:25 {'URI': True, 'Description': 'This is an URI received from 172.253.113.26. '}
+ns101.ovh.net 213.251.128.145 {'a_record': True, 'Description': 'This is an a-record received from ns101.ovh.net. '}
+dns101.ovh.net 213.251.188.145 {'a_record': True, 'Description': 'This is an a-record received from dns101.ovh.net. '}
+mx1.ovh.net 188.165.47.122 {'a_record': False}
+mx2.ovh.net 87.98.132.45 {'a_record': True, 'Description': 'This is an a-record received from mx2.ovh.net. '}
+mxb.ovh.net 46.105.45.21 {'a_record': True, 'Description': 'This is an a-record received from mxb.ovh.net. '}
+52.10.201.111 imaps://52.10.201.111:993 {'URI': True, 'Description': 'This is an URI received from 52.10.201.111. '}
+52.10.201.111 smtp://52.10.201.111:25 {'URI': True, 'Description': 'This is an URI received from 52.10.201.111. '}
+52.10.201.111 smtpstarttls://52.10.201.111:25 {'URI': True, 'Description': 'This is an URI received from 52.10.201.111. '}
+52.10.201.111 smtps://52.10.201.111:465 {'URI': True, 'Description': 'This is an URI received from 52.10.201.111. '}
+52.10.201.111 pop3s://52.10.201.111:995 {'URI': True, 'Description': 'This is an URI received from 52.10.201.111. '}
+52.10.174.57 smtp://52.10.174.57:25 {'URI': True, 'Description': 'This is an URI received from 52.10.174.57. '}
+52.10.174.57 smtpstarttls://52.10.174.57:25 {'URI': True, 'Description': 'This is an URI received from 52.10.174.57. '}
+52.10.174.57 smtps://52.10.174.57:465 {'URI': True, 'Description': 'This is an URI received from 52.10.174.57. '}
+52.10.174.57 imaps://52.10.174.57:993 {'URI': True, 'Description': 'This is an URI received from 52.10.174.57. '}
+52.10.174.57 pop3s://52.10.174.57:995 {'URI': True, 'Description': 'This is an URI received from 52.10.174.57. '}
+www43.wixdns.net 199.15.163.128 {'a_record': False}
+balancer.wixdns.net 34.117.168.233 {'a_record': False}
+f7a0737a-balancer.wixdns.net 54.184.58.211 {'a_record': False}
+td-balancer-199-15-163-148.wixdns.net 199.15.163.138 {'a_record': False}
+0819ceda-balancer.wixdns.net 34.117.168.233 {'a_record': False}
+td-balancer-199-15-163-128.wixdns.net 54.184.58.211 {'a_record': False}
+e2e8cd89-balancer.wixdns.net 34.117.168.233 {'a_record': False}
+td-balancer-dc11-60-102.wixdns.net 185.230.60.102 {'a_record': False}
+20784cd2-balancer.wixdns.net 199.15.163.138 {'a_record': False}
+td-balancer-euw3-251-130.wixdns.net 199.15.163.138 {'a_record': False}
+ns8.mydnspt.net 188.40.99.131 {'a_record': True, 'Description': 'This is an a-record received from ns8.mydnspt.net. '}
+ns8.mydnspt.net ns8.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns8.mydnspt.net. This is an mx-record received from ns8.mydnspt.net. ', 'mx_record': True}
+ns8.mydnspt.net ns2.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns8.mydnspt.net. '}
+ns8.mydnspt.net ns1.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns8.mydnspt.net. '}
+ns8.mydnspt.net ns7.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns8.mydnspt.net. '}
+ns2.mydnspt.net 130.185.85.17 {'a_record': False}
+ns2.mydnspt.net ns1.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns2.mydnspt.net. '}
+ns2.mydnspt.net ns2.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns2.mydnspt.net. This is an mx-record received from ns2.mydnspt.net. ', 'mx_record': True}
+ns1.mydnspt.net 109.71.47.252 {'a_record': False}
+ns1.mydnspt.net ns1.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns1.mydnspt.net. This is an mx-record received from ns1.mydnspt.net. ', 'mx_record': True}
+ns1.mydnspt.net ns2.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns1.mydnspt.net. '}
+ns1.mydnspt.net ns7.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns1.mydnspt.net. '}
+ns1.mydnspt.net ns8.mydnspt.net {'ns_record': True, 'Description': 'This is an ns-record received from ns1.mydnspt.net. '}
+mx2.cleanmx.pt 130.185.80.111 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx2.cleanmx.pt 109.71.47.161 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx2.cleanmx.pt 109.71.47.153 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx2.cleanmx.pt 130.185.80.201 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx2.cleanmx.pt 130.185.80.211 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx2.cleanmx.pt 109.71.47.61 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx2.cleanmx.pt 130.185.80.60 {'a_record': True, 'Description': 'This is an a-record received from mx2.cleanmx.pt. '}
+mx1.cleanmx.pt 130.185.80.200 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+mx1.cleanmx.pt 109.71.47.160 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+mx1.cleanmx.pt 109.71.47.60 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+mx1.cleanmx.pt 130.185.80.60 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+mx1.cleanmx.pt 130.185.80.210 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+mx1.cleanmx.pt 109.71.47.152 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+mx1.cleanmx.pt 130.185.80.110 {'a_record': True, 'Description': 'This is an a-record received from mx1.cleanmx.pt. '}
+83.173.245.74 https://83.173.245.74/ {'URI': True, 'Description': 'This is an URI received from 83.173.245.74. '}
+83.173.245.74 https://83.173.245.74/owa/auth/logon.aspx {'URI': True, 'Description': 'This is an URI received from 83.173.245.74. '}
+83.173.245.74 https://83.173.245.74/owa/ {'URI': True, 'Description': 'This is an URI received from 83.173.245.74. '}
+83.144.230.129 http://83.144.230.129/ {'URI': True, 'Description': 'This is an URI received from 83.144.230.129. '}
+83.144.230.129 https://83.144.230.129/ {'URI': True, 'Description': 'This is an URI received from 83.144.230.129. '}
+83.173.245.76 https://83.173.245.76/ {'URI': True, 'Description': 'This is an URI received from 83.173.245.76. '}
