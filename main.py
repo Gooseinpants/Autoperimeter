@@ -489,8 +489,6 @@ def Finder(arguments):
 
 def Dispatcher(depth=3):
     if depth == 0:
-        with open('copy_test.edgelist', 'wb') as f_copy:
-            nx.write_edgelist(G, f_copy)
         return
     print(f'In dispatcher. {depth} iteration')
     with open('test.edgelist', 'r') as f:
@@ -523,14 +521,13 @@ def Analyser():
             tmp = f.readline().split(' ')
             if tmp[0] == '':
                 break
-            with open('copy_test.edgelist', 'r') as f_copy:
-                while True:
-                    tmp_copy = f_copy.readline().split(' ')
-                    if tmp_copy[0] == '':
-                        break
-
-                    if ch.is_domain(tmp_copy[1]) == 1:
-                        source = tmp_copy[0]
+            if ch.is_domain(tmp[1]) and 'mx_record' in G[f'{tmp[0]}'][f'{tmp[1]}']:
+                for nbr, datadict in G.pred[f'{tmp[1]}'].items():
+                    if nbr != tmp[0] and 'mx_record' in G[f'{nbr}'][f'{tmp[1]}']:
+                        check_and_add_Weight(G, nbr, CERTAINLY)
+                        # тут возможно стоит добавить вес и другой вершине (первое условие в ифе),
+                        # но не возникнет ли лишнее добавление веса?
+                        # стоит ли добавлять мх-запись в скоуп?
 
 
 if __name__ == "__main__":
@@ -556,11 +553,15 @@ if __name__ == "__main__":
     with open('test.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print("Dispatcher was launched")
+
     Dispatcher(DEPTH_OF_SEARCH)
+
+    Analyser()
+
     t2 = time.time_ns()
 
     with open('test.edgelist', 'r') as f:
-        print(*f.readlines())
+        print(*f.readlines(), sep='')
 
     with open('result.txt', 'w') as f:
         print('In scope for sure:', file=f)
@@ -580,4 +581,3 @@ if __name__ == "__main__":
 # возможные взаимосвяи:
 # в тхт записях поискать домены и айпи. Они будут входить в скоуп.
 # Если есть перекрёстные ссылки на сайтах, то они входят в скоуп.
-# Если у доменов/поддоменов и тд общая mx- запись, то входит в скоуп
