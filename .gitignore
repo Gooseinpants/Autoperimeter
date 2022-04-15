@@ -132,3 +132,4 @@ dmypy.json
 # Ignore config-file with API-key
 config
 /test.edgelist
+/result.txt
