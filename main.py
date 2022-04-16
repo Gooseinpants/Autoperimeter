@@ -251,13 +251,20 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 
             if side_domain == domain_name:
                 continue
-            # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
-            # он её проходит. Махров В.Д.
+
+            #cross = cross_links(side_domain, domain_name)
+            #if cross == 1:
+
+
+                # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
+                # он её проходит. Махров В.Д.
             G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
             check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
             if 'Checked' not in G.nodes[f'{side_domain}']:
                 G.nodes[f'{side_domain}']['Checked'] = False
             G.nodes[f'{side_domain}']['side_domain'] = True
+            #else:
+                #continue
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -299,6 +306,7 @@ def google_tags(body):
 
 
 def cross_links(domain_name, domain_name_orig):
+    print(domain_name_orig)
     result = 0
     finisheds = 0
     sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
@@ -328,7 +336,7 @@ def cross_links(domain_name, domain_name_orig):
                                 mark = 0
 
                             if mark == 1:
-                                # print('Cross-link: ' + str(url))
+                                print('Cross-link: ' + str(url))
                                 result = 1
                                 return result
 
@@ -581,3 +589,19 @@ if __name__ == "__main__":
 # возможные взаимосвяи:
 # в тхт записях поискать домены и айпи. Они будут входить в скоуп.
 # Если есть перекрёстные ссылки на сайтах, то они входят в скоуп.
+# favicon.hash_sha256
+# Google-tag-manager: GTM-_______
+# Сертификаты
+# Веса взаимосвязей
+# 1. Поддомены - 1
+# 2. ns-записи - 0.1
+# 3. mx-записи - 1.0
+# 4. g-tag - 1.0
+# 5. favicon - 0.6
+# 6. сертификат - 1.0
+# 7. cross-link - 0.7
+# 8. side-domains - 0.3
+# 9. a-записи - 0.3
+# 10.ptr-записи - 0.1 
+# 11.a+ptr - 1.0
+# 12.сервисы - 1.0
