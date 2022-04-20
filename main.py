@@ -1,13 +1,13 @@
 import sys
 import time
-
+import re
 import netlas
 import networkx as nx
 import urlextract
 from urlextract import URLExtract
 import matplotlib.pyplot as plt
 import json
-
+from tlds import arr_tlds
 import check as ch
 import service as sv
 
@@ -15,6 +15,7 @@ DEPTH_OF_SEARCH = 3
 CERTAINLY = 1
 PROBABLY = 0.5
 UNLIKELY = 0.2
+HIGHLY_UNLIKELY=0.1
 
 G = nx.DiGraph()  # Our main graph
 
@@ -166,6 +167,19 @@ def direct_dns_records(domain_name):
                 txt_record = records_of_domain['txt']
                 G.add_edge(f'{domain_name}', f'{txt_record}', txt_record=True)
                 check_and_add_Descr(G, domain_name, txt_record, f'This is a txt-record received from {domain_name}. ')
+                ip_regex = re.findall(r'(?:\d{1,3}\.){3}\d{1,3}', txt_record)#находим айпишники в txt записи
+                for found_ip in ip_regex:
+                    G.add_edge(f'{domain_name}', f'{found_ip}', URI=True)
+                    check_and_add_Descr(G, domain_name, found_ip,
+                                        f'This is an IPv4 address found in a txt-record of the {domain_name} domain. ')
+                    check_and_add_Weight(G, found_ip, CERTAINLY)
+                for tld in arr_tlds:#находим все домены в txt записи
+                    tlds_regex = re.findall(r'(?:[0-9A-Za-z-]*\.){1,61}' + f'(?:{tld}$|{tld}[^0-9A-Za-z-])', txt_record)
+                    for found_domain in tlds_regex:
+                        G.add_edge(f'{domain_name}', f'{found_domain}', side_domain=True)
+                        check_and_add_Descr(G, domain_name, found_domain,
+                                            f'This is an domain found in a txt-record of the {domain_name} domain. ')
+                        check_and_add_Weight(G, found_domain, HIGHLY_UNLIKELY)
                 if 'Checked' not in G.nodes[f'{txt_record}']:
                     G.nodes[f'{txt_record}']['Checked'] = False
 
