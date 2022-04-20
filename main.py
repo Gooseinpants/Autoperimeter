@@ -176,6 +176,8 @@ def direct_dns_records(domain_name):
                 for tld in arr_tlds:#находим все домены в txt записи
                     tlds_regex = re.findall(r'(?:[0-9A-Za-z-]*\.){1,61}' + f'(?:{tld}$|{tld}[^0-9A-Za-z-])', txt_record)
                     for found_domain in tlds_regex:
+                        if not found_domain[-1:].isalpha():
+                            found_domain = found_domain[:-1]#устранение лишнего не алфавитного символа(регулярное выражение на пару строк выше иногда выдает строку с лишним символом)
                         G.add_edge(f'{domain_name}', f'{found_domain}', side_domain=True)
                         check_and_add_Descr(G, domain_name, found_domain,
                                             f'This is an domain found in a txt-record of the {domain_name} domain. ')
