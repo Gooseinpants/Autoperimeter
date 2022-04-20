@@ -252,19 +252,19 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
             if side_domain == domain_name:
                 continue
 
-            #cross = cross_links(side_domain, domain_name)
-            #if cross == 1:
+            cross = cross_links(side_domain, domain_name)
+            if cross == 1:
 
 
                 # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
                 # он её проходит. Махров В.Д.
-            G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
-            check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
-            if 'Checked' not in G.nodes[f'{side_domain}']:
-                G.nodes[f'{side_domain}']['Checked'] = False
-            G.nodes[f'{side_domain}']['side_domain'] = True
-            #else:
-                #continue
+                G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
+                check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
+                if 'Checked' not in G.nodes[f'{side_domain}']:
+                    G.nodes[f'{side_domain}']['Checked'] = False
+                G.nodes[f'{side_domain}']['side_domain'] = True
+            else:
+                continue
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -582,9 +582,9 @@ if __name__ == "__main__":
                 print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
     print(G)
     print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
-    # Graphical output of the graph
-    #  nx.draw_networkx(G)
-    #  plt.show()  # necessary
+    #  Graphical output of the graph
+    nx.draw_networkx(G)
+    plt.show()  # necessary
 
 # возможные взаимосвяи:
 # в тхт записях поискать домены и айпи. Они будут входить в скоуп.
@@ -593,15 +593,15 @@ if __name__ == "__main__":
 # Google-tag-manager: GTM-_______
 # Сертификаты
 # Веса взаимосвязей
-# 1. Поддомены - 1
-# 2. ns-записи - 0.1
-# 3. mx-записи - 1.0
-# 4. g-tag - 1.0
-# 5. favicon - 0.6
-# 6. сертификат - 1.0
-# 7. cross-link - 0.7
+# 1. Поддомены    - 1.0
+# 2. ns-записи    - 0.1
+# 3. mx-записи    - 1.0
+# 4. g-tag        - 1.0
+# 5. favicon      - 0.6
+# 6. сертификат   - 1.0
+# 7. cross-link   - 0.7
 # 8. side-domains - 0.3
-# 9. a-записи - 0.3
-# 10.ptr-записи - 0.1 
-# 11.a+ptr - 1.0
-# 12.сервисы - 1.0
+# 9. a-записи     - 0.3
+# 10.ptr-записи   - 0.1 
+# 11.a+ptr        - 1.0
+# 12.сервисы      - 1.0
