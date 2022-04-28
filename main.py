@@ -9,12 +9,34 @@ import matplotlib.pyplot as plt
 import json
 
 import check as ch
-import service as sv
 
 DEPTH_OF_SEARCH = 3
-CERTAINLY = 1
-PROBABLY = 0.5
-UNLIKELY = 0.2
+
+
+def print_help():
+    print("Usage: python3 main.py [flags] [target] \n")
+    print("Target specification: Domain names or IP-addresses\n")
+    print("Flags:")
+    print("    -h: Print this page")
+    print("    -c: Enter Netlas API key: main.py -c \'API key\'")
+
+
+def parse_args(argv):
+    if len(argv) == 1:
+        print("Please enter search parameters")
+        sys.exit()
+    elif argv[1][0] != '-':
+        args = [argv[1]]
+        print("arg = ", args[0])
+    elif len(argv) == 2:
+        args = [argv[1]]
+        print("flags = ", args[0])
+    else:
+        args = [argv[1], argv[2]]
+        print("flags = ", args[0])
+        print("arg = ", args[1])
+    return args
+
 
 G = nx.DiGraph()  # Our main graph
 
@@ -27,13 +49,6 @@ def check_and_add_Descr(graph, u_node, v_node, msg):
         graph[f'{u_node}'][f'{v_node}']['Description'] = msg
 
 
-def check_and_add_Weight(graph, node, weight):
-    if 'Scope' in graph.nodes[f'{node}']:
-        graph.nodes[f'{node}']['Scope'] = graph.nodes[f'{node}']['Scope'] + weight
-    else:
-        graph.nodes[f'{node}']['Scope'] = weight
-
-
 def services_dom(domain_name):
     # Нахождение сервисов на домене, всё работает. Махров В.Д.
     sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
@@ -44,10 +59,6 @@ def services_dom(domain_name):
         query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
         items = query_res['items']
         for item in items:
-            # print('///////////')
-            # print(json.dumps(item, sort_keys=True, indent=4))
-            # print('///////////')
-            # high = item['highlight']
             data = item['data']
             http = data['http']
             uri = data['uri']
@@ -58,11 +69,17 @@ def services_dom(domain_name):
                 if sc == 301 or sc == 302:
                     if 'location' in header:
                         locs = header['location']
-                        for loc in locs:
-                            print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
-                                sc) + ', Redirected to: ' + loc)
+                        # for loc in locs:
+                        #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
+                        #         sc) + ', Redirected to: ' + loc)
                 else:
-                    print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc))
+                    G.add_edge(f'{domain_name}', f'{uri}', service_on_domain=True)
+
+                    G.nodes[f'{uri}']['Checked'] = True
+                    msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
+                    check_and_add_Descr(G, domain_name, uri, msg)
+
+                    # print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(sc))
 
             # Поиск по g-тэгам
             if 'tag' in data:
@@ -70,7 +87,8 @@ def services_dom(domain_name):
                 for tag in tags:
                     if 'google_tag_manager' in tag:
                         body = http['body']
-                        # google_tags(str(body)) - закоментированно до тех пор, пока не разберусь с добавлением в граф,
+                        google_tags(str(body),
+                                    domain_name)  # - закоментированно до тех пор, пока не разберусь с добавлением в граф,
                         # так-то работает. Махров В.Д.
 
             # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
@@ -145,7 +163,12 @@ def services_dom(domain_name):
 
                         mark = cross_links(new_dom, domain_name)
                         if mark == 1:
-                            print('Has cross-links with main domain: ' + new_dom)
+                            G.add_edge(f'{domain_name}', f'{new_dom}', service_on_domain=True)
+
+                            G.nodes[f'{new_dom}']['Checked'] = True  # возможно будет ошибка с тем, что мы не проверяем
+                            # этот домен, а нужно
+                            msg = f'This is a domain which has cross-links with main domain: {domain_name}. '
+                            check_and_add_Descr(G, domain_name, new_dom, msg)
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -229,9 +252,7 @@ def subdomains(domain_name):  # *.domain.name
             G.add_edge(f'{domain_name}', f'{subdomain}', subdomain=True)
 
             check_and_add_Descr(G, domain_name, subdomain, f'This is a subdomain of the {domain_name} domain. ')
-            check_and_add_Weight(G, subdomain, CERTAINLY)
-            if 'Checked' not in G.nodes[f'{subdomain}']:
-                G.nodes[f'{subdomain}']['Checked'] = False
+            G.nodes[f'{subdomain}']['Checked'] = False
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -254,10 +275,9 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
             # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
             # он её проходит. Махров В.Д.
             G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
+
             check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
-            if 'Checked' not in G.nodes[f'{side_domain}']:
-                G.nodes[f'{side_domain}']['Checked'] = False
-            G.nodes[f'{side_domain}']['side_domain'] = True
+            G.nodes[f'{side_domain}']['Checked'] = False
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -270,7 +290,7 @@ def domain_research(domain_name):
     services_dom(domain_name)
 
 
-def google_tags(body):
+def google_tags(body, domain):
     # Поиск сервисов с одинаковым google-тэгом
     index = body.find("GTM-")
     if index != -1:
@@ -290,9 +310,14 @@ def google_tags(body):
             data = item['data']
             http = data['http']
             uri = data['uri']
-            header = http['headers']
+            G.add_edge(f'{domain}', f'{uri}', Same_g_tag=True)
 
-            # print('Service with same g-tag: ' + uri) - print для отладки, здесь нужно добавлять в граф
+            G.nodes[f'{uri}']['Checked'] = True
+            msg = f'This is an URI received from {domain}. '
+            if 'Description' in G[f'{domain}'][f'{uri}']:
+                G[f'{domain}'][f'{uri}']['Description'] = G[f'{domain}'][f'{uri}']['Description'] + msg
+            else:
+                G[f'{domain}'][f'{uri}']['Description'] = msg
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -362,14 +387,21 @@ def services_IP(IP):
                 if sc == 301 or sc == 302:
                     if 'location' in header:
                         locs = header['location']
-                        for loc in locs:
-                            print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(
-                                sc) + ', Redirected to: ' + loc)
+                        # for loc in locs:
+                        # print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(
+                        # sc) + ', Redirected to: ' + loc)
                 else:
-                    print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(sc))
+                    G.add_edge(f'{IP}', f'{uri}', service_on_IP=True)
 
-            if 'body' in http:
-                print('Links on service:')
+                    G.nodes[f'{uri}']['Checked'] = True
+                    msg = f'This is a service on IP ({IP}): with status code: {sc}. '
+                    if 'Description' in G[f'{IP}'][f'{uri}']:
+                        G[f'{IP}'][f'{uri}']['Description'] = G[f'{IP}'][f'{uri}']['Description'] + msg
+                    else:
+                        G[f'{IP}'][f'{uri}']['Description'] = msg
+
+            if 'body' in http: #Тут поиск ссылок на сервисе на айпи. Не помню, зачем, для кросс-линков?
+                #print('Links on service:')
                 body = http['body']
                 extractor = URLExtract()
                 urls = extractor.find_urls(body, check_dns=True)
@@ -418,8 +450,8 @@ def services_IP(IP):
                     else:
                         mark = 0
 
-                    if mark == 1:
-                        print(str(url))
+                    #if mark == 1:
+                     #   print(str(url))
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -461,17 +493,33 @@ def IP_research(IP):
     G.nodes[f'{IP}']['Checked'] = True
 
 
+def enter_api_key():
+    for i in args:
+        if ch.is_flags(i) == 0:
+            global api_key
+            api_key = i
+            with open('config', 'w') as f:
+                f.write(i)
+            break
+
+
+def parse_flags(flags):
+    for i in flags:
+        if i == 'h':
+            print_help()
+        elif i == 'c':
+            enter_api_key()
+
+
 def Finder(arguments):
     for arg in arguments:
         if ch.is_uri(arg):
             print("URI\n")
             break
         elif ch.is_domain(arg):
-            G.add_node(f'{arg}', Scope=CERTAINLY)
             domain_research(arg)
             break
         elif ch.is_ip(arg):
-            G.add_node(f'{arg}', Scope=CERTAINLY)
             IP_research(arg)
             break
         elif ch.is_subnet(arg):
@@ -489,8 +537,6 @@ def Finder(arguments):
 
 def Dispatcher(depth=3):
     if depth == 0:
-        with open('copy_test.edgelist', 'wb') as f_copy:
-            nx.write_edgelist(G, f_copy)
         return
     print(f'In dispatcher. {depth} iteration')
     with open('test.edgelist', 'r') as f:
@@ -500,10 +546,7 @@ def Dispatcher(depth=3):
                 break
             # для дальнейшего развития: для поддоменов стоит искать только записи.
             if ch.is_domain(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
-                if 'side_domain' in G.nodes[f'{tmp[1]}'] and G.nodes[f'{tmp[1]}']['side_domain'] is True:
-                    domain_research(tmp[1])
-                else:
-                    direct_dns_records(tmp[1])
+                direct_dns_records(tmp[1])
                 G.nodes[f'{tmp[1]}']['Checked'] = True
             if ch.is_ip(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
                 IP_research(tmp[1])
@@ -517,40 +560,24 @@ def Dispatcher(depth=3):
     Dispatcher(depth - 1)
 
 
-def Analyser():
-    with open('test.edgelist', 'r') as f:
-        while True:
-            tmp = f.readline().split(' ')
-            if tmp[0] == '':
-                break
-            with open('copy_test.edgelist', 'r') as f_copy:
-                while True:
-                    tmp_copy = f_copy.readline().split(' ')
-                    if tmp_copy[0] == '':
-                        break
-
-                    if ch.is_domain(tmp_copy[1]) == 1:
-                        source = tmp_copy[0]
-
-
 if __name__ == "__main__":
     api_key = ''
-    args = sv.parse_args(sys.argv)
+    args = parse_args(sys.argv)
 
     for i in args:
         if ch.is_flags(i):
-            api_key = sv.parse_flags(i, args, api_key)
+            parse_flags(i)
+
     if api_key != '':
         sys.exit()
 
-    with open('config', 'r') as f:
+    with open('config') as f:
         api_key = f.read()
         if api_key == '':
             print('Enter your Netlas API key')
             sys.exit()
         else:
             netlas_connection = netlas.Netlas(api_key=api_key)
-
     t1 = time.time_ns()
     Finder(args)
     with open('test.edgelist', 'wb') as f:
@@ -558,26 +585,17 @@ if __name__ == "__main__":
     print("Dispatcher was launched")
     Dispatcher(DEPTH_OF_SEARCH)
     t2 = time.time_ns()
-
     with open('test.edgelist', 'r') as f:
         print(*f.readlines())
-
-    with open('result.txt', 'w') as f:
-        print('In scope for sure:', file=f)
-        for n in G:
-            if 'Scope' in G.nodes[f'{n}'] and G.nodes[f'{n}']['Scope'] >= 1:
-                print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
-        print('Probably in scope:', file=f)
-        for n in G:
-            if 'Scope' in G.nodes[f'{n}'] and 0.5 <= G.nodes[f'{n}']['Scope'] < 1:
-                print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
     print(G)
     print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
-    # Graphical output of the graph
-    #  nx.draw_networkx(G)
-    #  plt.show()  # necessary
+# Graphical output of the graph
+#  nx.draw_networkx(G)
+#  plt.show()  # necessary
+
 
 # возможные взаимосвяи:
+# поддомены точно входят в скоуп.
 # в тхт записях поискать домены и айпи. Они будут входить в скоуп.
 # Если есть перекрёстные ссылки на сайтах, то они входят в скоуп.
 # Если у доменов/поддоменов и тд общая mx- запись, то входит в скоуп
