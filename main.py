@@ -1,13 +1,13 @@
 import sys
 import time
-import re
+
 import netlas
 import networkx as nx
 import urlextract
 from urlextract import URLExtract
 import matplotlib.pyplot as plt
 import json
-from tlds import arr_tlds
+
 import check as ch
 import service as sv
 
@@ -15,7 +15,6 @@ DEPTH_OF_SEARCH = 3
 CERTAINLY = 1
 PROBABLY = 0.5
 UNLIKELY = 0.2
-HIGHLY_UNLIKELY=0.1
 
 G = nx.DiGraph()  # Our main graph
 
@@ -167,21 +166,6 @@ def direct_dns_records(domain_name):
                 txt_record = records_of_domain['txt']
                 G.add_edge(f'{domain_name}', f'{txt_record}', txt_record=True)
                 check_and_add_Descr(G, domain_name, txt_record, f'This is a txt-record received from {domain_name}. ')
-                ip_regex = re.findall(r'(?:\d{1,3}\.){3}\d{1,3}', txt_record)#находим айпишники в txt записи
-                for found_ip in ip_regex:
-                    G.add_edge(f'{domain_name}', f'{found_ip}', URI=True)
-                    check_and_add_Descr(G, domain_name, found_ip,
-                                        f'This is an IPv4 address found in a txt-record of the {domain_name} domain. ')
-                    check_and_add_Weight(G, found_ip, CERTAINLY)
-                for tld in arr_tlds:#находим все домены в txt записи
-                    tlds_regex = re.findall(r'(?:[0-9A-Za-z-]*\.){1,61}' + f'(?:{tld}$|{tld}[^0-9A-Za-z-])', txt_record)
-                    for found_domain in tlds_regex:
-                        if not found_domain[-1:].isalpha():
-                            found_domain = found_domain[:-1]#устранение лишнего не алфавитного символа(регулярное выражение на пару строк выше иногда выдает строку с лишним символом)
-                        G.add_edge(f'{domain_name}', f'{found_domain}', side_domain=True)
-                        check_and_add_Descr(G, domain_name, found_domain,
-                                            f'This is an domain found in a txt-record of the {domain_name} domain. ')
-                        check_and_add_Weight(G, found_domain, HIGHLY_UNLIKELY)
                 if 'Checked' not in G.nodes[f'{txt_record}']:
                     G.nodes[f'{txt_record}']['Checked'] = False
 
@@ -267,20 +251,13 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 
             if side_domain == domain_name:
                 continue
-
-            cross = cross_links(side_domain, domain_name)
-            if cross == 1:
-
-
-                # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
-                # он её проходит. Махров В.Д.
-                G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
-                check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
-                if 'Checked' not in G.nodes[f'{side_domain}']:
-                    G.nodes[f'{side_domain}']['Checked'] = False
-                G.nodes[f'{side_domain}']['side_domain'] = True
-            else:
-                continue
+            # Предлагаю вставить сюда проверку на кросс-линки и пихать сайд-домен в скоуп, только если
+            # он её проходит. Махров В.Д.
+            G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
+            check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
+            if 'Checked' not in G.nodes[f'{side_domain}']:
+                G.nodes[f'{side_domain}']['Checked'] = False
+            G.nodes[f'{side_domain}']['side_domain'] = True
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -322,7 +299,6 @@ def google_tags(body):
 
 
 def cross_links(domain_name, domain_name_orig):
-    print(domain_name_orig)
     result = 0
     finisheds = 0
     sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
@@ -352,7 +328,7 @@ def cross_links(domain_name, domain_name_orig):
                                 mark = 0
 
                             if mark == 1:
-                                print('Cross-link: ' + str(url))
+                                # print('Cross-link: ' + str(url))
                                 result = 1
                                 return result
 
@@ -513,6 +489,8 @@ def Finder(arguments):
 
 def Dispatcher(depth=3):
     if depth == 0:
+        with open('copy_test.edgelist', 'wb') as f_copy:
+            nx.write_edgelist(G, f_copy)
         return
     print(f'In dispatcher. {depth} iteration')
     with open('test.edgelist', 'r') as f:
@@ -545,13 +523,14 @@ def Analyser():
             tmp = f.readline().split(' ')
             if tmp[0] == '':
                 break
-            if ch.is_domain(tmp[1]) and 'mx_record' in G[f'{tmp[0]}'][f'{tmp[1]}']:
-                for nbr, datadict in G.pred[f'{tmp[1]}'].items():
-                    if nbr != tmp[0] and 'mx_record' in G[f'{nbr}'][f'{tmp[1]}']:
-                        check_and_add_Weight(G, nbr, CERTAINLY)
-                        # тут возможно стоит добавить вес и другой вершине (первое условие в ифе),
-                        # но не возникнет ли лишнее добавление веса?
-                        # стоит ли добавлять мх-запись в скоуп?
+            with open('copy_test.edgelist', 'r') as f_copy:
+                while True:
+                    tmp_copy = f_copy.readline().split(' ')
+                    if tmp_copy[0] == '':
+                        break
+
+                    if ch.is_domain(tmp_copy[1]) == 1:
+                        source = tmp_copy[0]
 
 
 if __name__ == "__main__":
@@ -577,15 +556,11 @@ if __name__ == "__main__":
     with open('test.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print("Dispatcher was launched")
-
     Dispatcher(DEPTH_OF_SEARCH)
-
-    Analyser()
-
     t2 = time.time_ns()
 
     with open('test.edgelist', 'r') as f:
-        print(*f.readlines(), sep='')
+        print(*f.readlines())
 
     with open('result.txt', 'w') as f:
         print('In scope for sure:', file=f)
@@ -598,26 +573,11 @@ if __name__ == "__main__":
                 print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
     print(G)
     print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
-    #  Graphical output of the graph
-    nx.draw_networkx(G)
-    plt.show()  # necessary
+    # Graphical output of the graph
+    #  nx.draw_networkx(G)
+    #  plt.show()  # necessary
 
 # возможные взаимосвяи:
 # в тхт записях поискать домены и айпи. Они будут входить в скоуп.
 # Если есть перекрёстные ссылки на сайтах, то они входят в скоуп.
-# favicon.hash_sha256
-# Google-tag-manager: GTM-_______
-# Сертификаты
-# Веса взаимосвязей
-# 1. Поддомены    - 1.0
-# 2. ns-записи    - 0.1
-# 3. mx-записи    - 1.0
-# 4. g-tag        - 1.0
-# 5. favicon      - 0.6
-# 6. сертификат   - 1.0
-# 7. cross-link   - 0.7
-# 8. side-domains - 0.3
-# 9. a-записи     - 0.3
-# 10.ptr-записи   - 0.1 
-# 11.a+ptr        - 1.0
-# 12.сервисы      - 1.0
+# Если у доменов/поддоменов и тд общая mx- запись, то входит в скоуп
