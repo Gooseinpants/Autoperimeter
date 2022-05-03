@@ -180,24 +180,31 @@ def direct_dns_records(domain_name):
             txt_record = records_of_domain['txt']
             G.add_edge(f'{domain_name}', f'{txt_record}', txt_record=True)
             check_and_add_Descr(G, domain_name, txt_record, f'This is a txt-record received from {domain_name}. ')
-            # ip_regex = re.findall(r'(?:\d{1,3}\.){3}\d{1,3}', txt_record)  # находим айпишники в txt записи
-            # for found_ip in ip_regex:
-            #     G.add_edge(f'{domain_name}', f'{found_ip}', URI=True)
-            #     check_and_add_Descr(G, domain_name, found_ip,
-            #                         f'This is an IPv4 address found in a txt-record of the {domain_name} domain. ')
-            #     check_and_add_Weight(G, found_ip, CERTAINLY)
-            # for tld in arr_tlds:  # находим все домены в txt записи
-            #     tlds_regex = re.findall(r'(?:[0-9A-Za-z-]*\.){1,61}' + f'(?:{tld}$|{tld}[^0-9A-Za-z-])', txt_record)
-            #     for found_domain in tlds_regex:
-            #         if not found_domain[-1:].isalpha():
-            #             found_domain = found_domain[
-            #                            :-1]  # устранение лишнего не алфавитного символа(регулярное выражение на пару строк выше иногда выдает строку с лишним символом)
-            #         G.add_edge(f'{domain_name}', f'{found_domain}', side_domain=True)
-            #         check_and_add_Descr(G, domain_name, found_domain,
-            #                             f'This is an domain found in a txt-record of the {domain_name} domain. ')
-            #         check_and_add_Weight(G, found_domain, HIGHLY_UNLIKELY)
-            if 'Checked' not in G.nodes[f'{txt_record}']:
-                G.nodes[f'{txt_record}']['Checked'] = False
+            ip_regex = re.findall(r'(?:\d{1,3}\.){3}\d{1,3}', f'{txt_record}')  # находим айпишники в txt записи
+            for found_ip in ip_regex:
+                G.add_edge(f'{domain_name}', f'{found_ip}', URI=True)
+                #print(f'txt parse result--{found_ip}')
+                check_and_add_Descr(G, domain_name, found_ip,
+                                    f'This is an IPv4 address found in a txt-record of the {domain_name} domain. ')
+                check_and_add_Weight(G, found_ip, CERTAINLY)
+                if 'Checked' not in G.nodes[f'{found_ip}']:
+                    G.nodes[f'{found_ip}']['Checked'] = False
+            for tld in arr_tlds:  # находим все домены в txt записи
+                tlds_regex = re.findall(r'(?:[0-9A-Za-z-]*\.){1,61}' + f'(?:{tld}[^0-9A-Za-z-.]|{tld}$)',
+                                        f'{txt_record}')
+                for found_domain in tlds_regex:
+                    if not found_domain[-1:].isalpha():
+                        found_domain = found_domain[
+                                       :-1]  # устранение лишнего не алфавитного символа(регулярное выражение на пару строк выше иногда выдает строку с лишним символом)
+                    G.add_edge(f'{domain_name}', f'{found_domain}', side_domain=True)
+                    #print(f'txt parse result--{found_domain}')
+                    check_and_add_Descr(G, domain_name, found_domain,
+                                        f'This is an domain found in a txt-record of the {domain_name} domain. ')
+                    check_and_add_Weight(G, found_domain, HIGHLY_UNLIKELY)
+                    if 'Checked' not in G.nodes[f'{found_domain}']:
+                        G.nodes[f'{found_domain}']['Checked'] = False
+                if 'Checked' not in G.nodes[f'{txt_record}']:
+                    G.nodes[f'{txt_record}']['Checked'] = False
 
         if 'a' in records_of_domain:
             a_record = records_of_domain['a']
