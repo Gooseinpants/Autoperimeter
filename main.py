@@ -63,7 +63,8 @@ def services_dom(domain_name):
             sc = http['status_code']
             if sc == 301 or sc == 302:
                 if 'location' in header:
-                    locs = header['location']
+                    pass
+                    # locs = header['location']
                     # for loc in locs:
                     #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
                     #         sc) + ', Redirected to: ' + loc)
@@ -204,13 +205,16 @@ def direct_dns_records(domain_name):
                 # Проверка на айпи массовой регистрации. Махров В.Д.
                 sQuery2 = "a:" + a
                 cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
+                # вес пока добавляется а-записи, которая не является айпи массовой регистрации
                 if cnt_of_res2['count'] > 30:
                     # является айпи массовой регистрации -> не является а-записью
                     G.add_edge(f'{domain_name}', f'{a}', a_record=False)
+                    check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
                     G.nodes[f'{a}']['Checked'] = True
                 else:
                     G.add_edge(f'{domain_name}', f'{a}', a_record=True)
                     check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
+                    check_and_add_Weight(G, a, 0.3)  # возможно стоит поменять и сделать константу с весом
                     if 'Checked' not in G.nodes[f'{a}']:
                         G.nodes[f'{a}']['Checked'] = False
 
@@ -220,6 +224,7 @@ def direct_dns_records(domain_name):
                 G.add_edge(f'{domain_name}', f'{ns}', ns_record=True)
 
                 check_and_add_Descr(G, domain_name, ns, f'This is an ns-record received from {domain_name}. ')
+                check_and_add_Weight(G, ns, HIGHLY_UNLIKELY)
                 if 'Checked' not in G.nodes[f'{ns}']:
                     G.nodes[f'{ns}']['Checked'] = False
 
@@ -263,7 +268,7 @@ def subdomains(domain_name):  # *.domain.name
             G.nodes[f'{subdomain}']['Checked'] = False
 
 
-def sidedomains(domain_name):  # domain.[ru|com|cz|...]
+def sidedomains(domain_name, original_domain=''):  # domain.[ru|com|cz|...]
     sQuery = "domain:" + domain_name.split('.')[0] + ".*"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
     if cnt_of_res['count'] == 0:
@@ -277,24 +282,34 @@ def sidedomains(domain_name):  # domain.[ru|com|cz|...]
 
         side_domain = item['data']['domain']
 
-        if side_domain == domain_name:
+        if side_domain == domain_name or side_domain == original_domain:
             continue
 
         cross = cross_links(side_domain, domain_name)
+
         if cross == 1:
             G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
             check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
+            check_and_add_Weight(G, side_domain, CERTAINLY)
             if 'Checked' not in G.nodes[f'{side_domain}']:
                 G.nodes[f'{side_domain}']['Checked'] = False
             G.nodes[f'{side_domain}']['side_domain'] = True
         else:
             continue
+            # с этим большие проблемы
+
+            # G.add_edge(f'{domain_name}', f'{side_domain}', side_domain=True)
+            # check_and_add_Descr(G, domain_name, side_domain, f'This is a side-domain of the {domain_name} domain. ')
+            # check_and_add_Weight(G, side_domain, 0.3)  # возможно стоит поменять и сделать константу с весом
+            # if 'Checked' not in G.nodes[f'{side_domain}']:
+            #     G.nodes[f'{side_domain}']['Checked'] = False
+            # G.nodes[f'{side_domain}']['side_domain'] = True
 
 
-def domain_research(domain_name):
+def domain_research(domain_name, original_domain=''):
     direct_dns_records(domain_name)
     subdomains(domain_name)
-    sidedomains(domain_name)
+    sidedomains(domain_name, original_domain)
     services_dom(domain_name)
 
 
@@ -397,7 +412,8 @@ def services_IP(IP):
             sc = http['status_code']
             if sc == 301 or sc == 302:
                 if 'location' in header:
-                    locs = header['location']
+                    pass
+                    # locs = header['location']
                     # for loc in locs:
                     # print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(
                     # sc) + ', Redirected to: ' + loc)
@@ -506,12 +522,12 @@ def Finder(arguments):
             break
         elif ch.is_domain(arg):
             G.add_node(f'{arg}', Scope=CERTAINLY)
-            domain_research(arg)
-            break
+            domain_research(arg, arg)
+            return arg  # original domain
         elif ch.is_ip(arg):
             G.add_node(f'{arg}', Scope=CERTAINLY)
             IP_research(arg)
-            break
+            return ''
         elif ch.is_subnet(arg):
             print("subnet\n")
             break
@@ -525,7 +541,7 @@ def Finder(arguments):
             break
 
 
-def Dispatcher(depth=3):
+def Dispatcher(depth=3, original_domain=''):
     if depth == 0:
         return
     print(f'In dispatcher. {depth} iteration')
@@ -537,7 +553,7 @@ def Dispatcher(depth=3):
             # для дальнейшего развития: для поддоменов стоит искать только записи.
             if ch.is_domain(tmp[1]) == 1 and G.nodes[f'{tmp[1]}']['Checked'] is False:
                 if 'side_domain' in G.nodes[f'{tmp[1]}'] and G.nodes[f'{tmp[1]}']['side_domain'] is True:
-                    domain_research(tmp[1])
+                    domain_research(tmp[1], original_domain)
                 else:
                     direct_dns_records(tmp[1])
                 G.nodes[f'{tmp[1]}']['Checked'] = True
@@ -594,12 +610,15 @@ if __name__ == "__main__":
             netlas_connection = netlas.Netlas(api_key=api_key)
 
     t1 = time.time_ns()
-    Finder(args)
+    original_domain = Finder(args)
     with open('test.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print("Dispatcher was launched")
 
-    Dispatcher(DEPTH_OF_SEARCH)
+    if original_domain == '':
+        Dispatcher(DEPTH_OF_SEARCH)
+    else:
+        Dispatcher(DEPTH_OF_SEARCH, original_domain)
 
     Analyser()
 
@@ -630,15 +649,16 @@ if __name__ == "__main__":
 # Google-tag-manager: GTM-_______
 # Сертификаты
 # Веса взаимосвязей
-# 1. Поддомены    - 1.0
-# 2. ns-записи    - 0.1
-# 3. mx-записи    - 1.0
+# 1. Поддомены    - 1.0 V
+# 2. ns-записи    - 0.1 V
+# 3. mx-записи    - 1.0 V
 # 4. g-tag        - 1.0
 # 5. favicon      - 0.6
 # 6. сертификат   - 1.0
 # 7. cross-link   - 0.7
-# 8. side-domains - 0.3
-# 9. a-записи     - 0.3
+# 8. side-domains - 0.3 слишком сложно реализовать
+# 9. a-записи     - 0.3 V
 # 10.ptr-записи   - 0.1
 # 11.a+ptr        - 1.0
 # 12.сервисы      - 1.0
+# 13.cross-link + side domain - 1.0 V
