@@ -18,6 +18,7 @@ CERTAINLY = 1
 PROBABLY = 0.5
 UNLIKELY = 0.2
 HIGHLY_UNLIKELY = 0.1
+NOT_IN_SCOPE = 0
 
 G = nx.DiGraph()  # Our main graph
 
@@ -31,6 +32,9 @@ def check_and_add_Descr(graph, u_node, v_node, msg):
 
 
 def check_and_add_Weight(graph, node, weight):
+    if weight == NOT_IN_SCOPE:
+        graph.nodes[f'{node}']['Scope'] = weight
+        return
     if 'Scope' in graph.nodes[f'{node}']:
         graph.nodes[f'{node}']['Scope'] = graph.nodes[f'{node}']['Scope'] + weight
     else:
@@ -201,6 +205,7 @@ def direct_dns_records(domain_name):
                 sQuery2 = "a:" + a
                 cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
                 if cnt_of_res2['count'] > 30:
+                    # является айпи массовой регистрации -> не является а-записью
                     G.add_edge(f'{domain_name}', f'{a}', a_record=False)
                     G.nodes[f'{a}']['Checked'] = True
                 else:
@@ -561,6 +566,13 @@ def Analyser():
                         # тут возможно стоит добавить вес и другой вершине (первое условие в ифе),
                         # но не возникнет ли лишнее добавление веса?
                         # стоит ли добавлять мх-запись в скоуп?
+            if ch.is_ip(tmp[1]) and 'a_record' in G[f'{tmp[0]}'][f'{tmp[1]}'] and G[f'{tmp[0]}'][f'{tmp[1]}'][
+                'a_record'] is False:
+                for nbr, datadict in G.pred[f'{tmp[1]}'].items():
+                    if 'a_record' in G[f'{nbr}'][f'{tmp[1]}']:
+                        check_and_add_Weight(G, nbr, NOT_IN_SCOPE)
+                        # тут исключается тот объект (скорее всего только домен) у которого а-запись
+                        # является айпи массовой регистрации
 
 
 if __name__ == "__main__":
