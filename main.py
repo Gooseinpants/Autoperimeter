@@ -46,122 +46,121 @@ def services_dom(domain_name):
     # Нахождение сервисов на домене, всё работает. Махров В.Д.
     sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
-    if cnt_of_res['count'] == 0:
-        return
-    downloaded_query = netlas_connection.download(query=sQuery, datatype='response', size=cnt_of_res['count'])
+    number_of_page = 0
 
-    for query_res in downloaded_query:
-        if query_res.decode('UTF-8')[len(query_res) - 1] == ',':
-            query_res = query_res[:len(query_res) - 1]
-        item = json.loads(query_res)
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
+        items = query_res['items']
+        for item in items:
+            data = item['data']
+            http = data['http']
+            uri = data['uri']
+            header = http['headers']
 
-        data = item['data']
-        http = data['http']
-        uri = data['uri']
-        header = http['headers']
-
-        if 'status_code' in http:
-            sc = http['status_code']
-            if sc == 301 or sc == 302:
-                if 'location' in header:
-                    pass
-                    # locs = header['location']
-                    # for loc in locs:
-                    #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
-                    #         sc) + ', Redirected to: ' + loc)
-            else:
-                G.add_edge(f'{domain_name}', f'{uri}', service_on_domain=True)
-
-                G.nodes[f'{uri}']['Checked'] = True
-                msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
-                check_and_add_Descr(G, domain_name, uri, msg)
-
-        # Поиск по g-тэгам
-        if 'tag' in data:
-            tags = data['tag']
-            for tag in tags:
-                if 'google_tag_manager' in tag:
-                    body = http['body']
-                    google_tags(str(body), domain_name)
-
-                    # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
-        # и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
-        if 'body' in http:
-            body = http['body']
-            extractor = URLExtract()
-            urls = extractor.find_urls(body, check_dns=True)
-            for url in urls:
-                mark = 1
-
-                index = str(url).find(".png")
-                if index == -1 and mark == 1:
-                    mark = 1
+            if 'status_code' in http:
+                sc = http['status_code']
+                if sc == 301 or sc == 302:
+                    if 'location' in header:
+                        locs = header['location']
+                        # for loc in locs:
+                        #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
+                        #         sc) + ', Redirected to: ' + loc)
                 else:
-                    mark = 0
+                    G.add_edge(f'{domain_name}', f'{uri}', service_on_domain=True)
 
-                index = str(url).find(".ico")
-                if index == -1 and mark == 1:
+                    G.nodes[f'{uri}']['Checked'] = True
+                    msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
+                    check_and_add_Descr(G, domain_name, uri, msg)
+
+            # Поиск по g-тэгам
+            if 'tag' in data:
+                tags = data['tag']
+                for tag in tags:
+                    if 'google_tag_manager' in tag:
+                        body = http['body']
+                        google_tags(str(body), domain_name)
+
+                        # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
+            # и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
+            if 'body' in http:
+                body = http['body']
+                extractor = URLExtract()
+                urls = extractor.find_urls(body, check_dns=True)
+                for url in urls:
                     mark = 1
-                else:
-                    mark = 0
 
-                index = str(url).find(".css")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".svg")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".jpg")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".pdf")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".js")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                if mark == 1:
-                    # 12.04.22 - поиск перекрёстных ссылок. Регулярные выражения это не мой случай. Махров В.Д.
-                    index = str(url).find("www.")
-                    if index != -1:
-                        index_save = index + 4
-                        index = str(url).find("/", index_save)
-                        if index != -1:
-                            new_dom = str(url)[index_save:index]
-                        else:
-                            new_dom = str(url)[index_save:]
+                    index = str(url).find(".png")
+                    if index == -1 and mark == 1:
+                        mark = 1
                     else:
-                        index = str(url).find("://")
-                        index_save = index + 3
-                        index = str(url).find("/", index_save)
-                        if index != -1:
-                            new_dom = str(url)[index_save:index]
-                        else:
-                            new_dom = str(url)[index_save:]
+                        mark = 0
 
-                    mark = cross_links(new_dom, domain_name)
+                    index = str(url).find(".ico")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".css")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".svg")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".jpg")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".pdf")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
+                    index = str(url).find(".js")
+                    if index == -1 and mark == 1:
+                        mark = 1
+                    else:
+                        mark = 0
+
                     if mark == 1:
-                        G.add_edge(f'{domain_name}', f'{new_dom}', service_on_domain=True)
+                        # 12.04.22 - поиск перекрёстных ссылок. Регулярные выражения это не мой случай. Махров В.Д.
+                        index = str(url).find("www.")
+                        if index != -1:
+                            index_save = index + 4
+                            index = str(url).find("/", index_save)
+                            if index != -1:
+                                new_dom = str(url)[index_save:index]
+                            else:
+                                new_dom = str(url)[index_save:]
+                        else:
+                            index = str(url).find("://")
+                            index_save = index + 3
+                            index = str(url).find("/", index_save)
+                            if index != -1:
+                                new_dom = str(url)[index_save:index]
+                            else:
+                                new_dom = str(url)[index_save:]
 
-                        G.nodes[f'{new_dom}']['Checked'] = True  # возможно будет ошибка с тем, что мы не проверяем
-                        # этот домен, а нужно
-                        msg = f'This is a domain which has cross-links with main domain: {domain_name}. '
-                        check_and_add_Descr(G, domain_name, new_dom, msg)
+                        mark = cross_links(new_dom, domain_name)
+                        if mark == 1:
+                            G.add_edge(f'{domain_name}', f'{new_dom}', service_on_domain=True)
+
+                            G.nodes[f'{new_dom}']['Checked'] = True  # возможно будет ошибка с тем, что мы не проверяем
+                            # этот домен, а нужно
+                            msg = f'This is a domain which has cross-links with main domain: {domain_name}. '
+                            check_and_add_Descr(G, domain_name, new_dom, msg)
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
 
 
 def direct_dns_records(domain_name):
