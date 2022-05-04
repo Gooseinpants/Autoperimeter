@@ -55,6 +55,7 @@ def services_dom(domain_name):
             data = item['data']
             http = data['http']
             uri = data['uri']
+            ip = data['ip']
             header = http['headers']
 
             if 'status_code' in http:
@@ -66,11 +67,17 @@ def services_dom(domain_name):
                         #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
                         #         sc) + ', Redirected to: ' + loc)
                 else:
-                    G.add_edge(f'{domain_name}', f'{uri}', service_on_domain=True)
+                    sQuery2 = "a:" + ip
+                    cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
 
-                    G.nodes[f'{uri}']['Checked'] = True
-                    msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
-                    check_and_add_Descr(G, domain_name, uri, msg)
+                    if cnt_of_res2['count'] < 30:
+                        G.add_edge(f'{domain_name}', f'{uri}', service_on_domain=True)
+
+                        G.nodes[f'{uri}']['Checked'] = True
+                        msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
+                        check_and_add_Descr(G, domain_name, uri, msg)
+                    #else:
+                        #print('Obana mass registration')
 
             # Поиск по g-тэгам
             if 'tag' in data:
@@ -658,7 +665,7 @@ if __name__ == "__main__":
 # 1. Поддомены    - 1.0 V
 # 2. ns-записи    - 0.1 V
 # 3. mx-записи    - 1.0 V
-# 4. g-tag        - 1.0
+# 4. g-tag        - 1.0 V
 # 5. favicon      - 0.6
 # 6. сертификат   - 1.0
 # 7. cross-link   - 0.7
@@ -666,5 +673,5 @@ if __name__ == "__main__":
 # 9. a-записи     - 0.3 V
 # 10.ptr-записи   - 0.1
 # 11.a+ptr        - 1.0
-# 12.сервисы      - 1.0
+# 12.сервисы      - 1.0 V
 # 13.cross-link + side domain - 1.0 V
