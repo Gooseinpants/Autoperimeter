@@ -19,8 +19,6 @@ UNLIKELY = 0.2
 HIGHLY_UNLIKELY = 0.1
 NOT_IN_SCOPE = 0
 
-TMP_FLAG = False
-
 G = nx.DiGraph()  # Our main graph
 
 
@@ -62,7 +60,8 @@ def services_dom(domain_name):
                 sc = http['status_code']
                 if sc == 301 or sc == 302:
                     if 'location' in header:
-                        locs = header['location']
+                        pass
+                        # locs = header['location']
                         # for loc in locs:
                         #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
                         #         sc) + ', Redirected to: ' + loc)
@@ -76,8 +75,9 @@ def services_dom(domain_name):
                         G.nodes[f'{uri}']['Checked'] = True
                         msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
                         check_and_add_Descr(G, domain_name, uri, msg)
-                    #else:
-                        #print('Obana mass registration')
+                        check_and_add_Weight(G, uri, CERTAINLY)
+                    # else:
+                    # print('Obana mass registration')
 
             # Поиск по g-тэгам
             if 'tag' in data:
@@ -160,11 +160,11 @@ def services_dom(domain_name):
                         mark = cross_links(new_dom, domain_name)
                         if mark == 1:
                             G.add_edge(f'{domain_name}', f'{new_dom}', service_on_domain=True)
-
-                            G.nodes[f'{new_dom}']['Checked'] = True  # возможно будет ошибка с тем, что мы не проверяем
-                            # этот домен, а нужно
+                            if 'Checked' not in G.nodes[f'{new_dom}']:
+                                G.nodes[f'{new_dom}']['Checked'] = False
                             msg = f'This is a domain which has cross-links with main domain: {domain_name}. '
                             check_and_add_Descr(G, domain_name, new_dom, msg)
+                            check_and_add_Weight(G, new_dom, CERTAINLY)
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -354,10 +354,8 @@ def google_tags(body, domain):
 
         G.nodes[f'{uri}']['Checked'] = True
         msg = f'This is an URI received from {domain}. '
-        if 'Description' in G[f'{domain}'][f'{uri}']:
-            G[f'{domain}'][f'{uri}']['Description'] = G[f'{domain}'][f'{uri}']['Description'] + msg
-        else:
-            G[f'{domain}'][f'{uri}']['Description'] = msg
+        check_and_add_Descr(G, domain, uri, msg)
+        check_and_add_Weight(G, uri, CERTAINLY)
 
 
 def cross_links(domain_name, domain_name_orig):
@@ -435,10 +433,8 @@ def services_IP(IP):
 
                 G.nodes[f'{uri}']['Checked'] = True
                 msg = f'This is a service on IP ({IP}): with status code: {sc}. '
-                if 'Description' in G[f'{IP}'][f'{uri}']:
-                    G[f'{IP}'][f'{uri}']['Description'] = G[f'{IP}'][f'{uri}']['Description'] + msg
-                else:
-                    G[f'{IP}'][f'{uri}']['Description'] = msg
+                check_and_add_Descr(G, IP, uri, msg)
+                check_and_add_Weight(G, uri, CERTAINLY)
 
         if 'body' in http:  # Тут поиск ссылок на сервисе на айпи. Не помню, зачем, для кросс-линков?
             body = http['body']
@@ -489,9 +485,6 @@ def services_IP(IP):
                 else:
                     mark = 0
 
-                # if mark == 1:
-                #     print(str(url))
-
 
 def URI_search(IP):  # Check via responses records
     sQuery = "host:" + IP
@@ -507,14 +500,9 @@ def URI_search(IP):  # Check via responses records
         uri = item['data']['uri']
         G.add_edge(f'{IP}', f'{uri}', URI=True)
         msg = f'This is an URI received from {IP}. '
-
+        check_and_add_Descr(G, IP, uri, msg)
         if 'Checked' not in G.nodes[f'{uri}']:
             G.nodes[f'{uri}']['Checked'] = False
-
-        if 'Description' in G[f'{IP}'][f'{uri}']:
-            G[f'{IP}'][f'{uri}']['Description'] = G[f'{IP}'][f'{uri}']['Description'] + msg
-        else:
-            G[f'{IP}'][f'{uri}']['Description'] = msg
 
 
 def whois_info(IP):  # Will be done later
@@ -604,6 +592,24 @@ def Analyser():
                         # является айпи массовой регистрации
 
 
+def dfs_for_sure(u_node, used, f):
+    used[f'{u_node}'] = True
+    for nbr, datadict in G.succ[f'{u_node}'].items():
+        if 'Scope' in G.nodes[f'{nbr}'] and G.nodes[nbr]['Scope'] >= 1 and used[nbr] is False:
+            dfs_for_sure(nbr, used, f)
+    if G.nodes[u_node]['Scope'] >= 1:
+        print(u_node, '\twith weight: ', G.nodes[f'{u_node}']['Scope'], file=f)
+
+
+def dfs_possible(u_node, used, f):
+    used[f'{u_node}'] = True
+    for nbr, datadict in G.succ[f'{u_node}'].items():
+        if 'Scope' in G.nodes[f'{nbr}'] and 0.5 <= G.nodes[nbr]['Scope'] < 1 and used[nbr] is False:
+            dfs_possible(nbr, used, f)
+    if 0.5 <= G.nodes[u_node]['Scope'] < 1:
+        print(u_node, '\twith weight: ', G.nodes[f'{u_node}']['Scope'], file=f)
+
+
 if __name__ == "__main__":
     api_key = ''
     args = sv.parse_args(sys.argv)
@@ -641,14 +647,11 @@ if __name__ == "__main__":
         print(*f.readlines(), sep='')
 
     with open('result.txt', 'w') as f:
+        used = dict.fromkeys([n for n in G], False)
         print('In scope for sure:', file=f)
-        for n in G:
-            if 'Scope' in G.nodes[f'{n}'] and G.nodes[f'{n}']['Scope'] >= 1:
-                print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
+        dfs_for_sure(original_domain, used, f)
         print('Probably in scope:', file=f)
-        for n in G:
-            if 'Scope' in G.nodes[f'{n}'] and 0.5 <= G.nodes[f'{n}']['Scope'] < 1:
-                print(n, '\twith weight: ', G.nodes[f'{n}']['Scope'], file=f)
+        dfs_possible(original_domain, used, f)
     print(G)
     print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
     # Graphical output of the graph
