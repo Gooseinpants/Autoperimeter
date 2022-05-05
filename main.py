@@ -3,9 +3,10 @@ import time
 import re
 
 import netlas
-import networkx as nx
-from urlextract import URLExtract
 import json
+import networkx as nx
+from pyvis.network import Network
+from urlextract import URLExtract
 from tlds import arr_tlds
 
 import check as ch
@@ -525,7 +526,7 @@ def Researcher(depth=3, original_domain=''):
     if depth == 0:
         return
     print(f'\nIn researcher. {depth} iteration.')
-    with open('test.edgelist', 'r') as f:
+    with open('graph.edgelist', 'r') as f:
         while True:
             tmp = f.readline().split(' ')
             if tmp[0] == '':
@@ -541,7 +542,7 @@ def Researcher(depth=3, original_domain=''):
                 G.nodes[f'{tmp[1]}']['Checked'] = True
 
     print(G)
-    with open('test.edgelist', 'wb') as f:
+    with open('graph.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     # nx.write_multiline_adjlist(G, fh)
 
@@ -550,7 +551,7 @@ def Researcher(depth=3, original_domain=''):
 
 def Analyser():
     """Функция для анализа имеющихся объектов"""
-    with open('test.edgelist', 'r') as f:
+    with open('graph.edgelist', 'r') as f:
         while True:
             tmp = f.readline().split(' ')
             if tmp[0] == '':
@@ -575,7 +576,9 @@ def dfs_possible(u_node, used, dict_for_scope_probably):
     for nbr, datadict in G.succ[f'{u_node}'].items():
         if 'Scope' in G.nodes[f'{nbr}'] and 0.5 <= G.nodes[nbr]['Scope'] < 1 and used[nbr] is False:
             dfs_possible(nbr, used, dict_for_scope_probably)
-    if 0.5 <= G.nodes[u_node]['Scope'] < 1:
+    if 0.5 <= G.nodes[f'{u_node}']['Scope'] < 1:
+        G.nodes[f'{u_node}']['color'] = '#FFDB00'
+        G.nodes[f'{u_node}']['title'] = 'Probably in scope'
         if ch.is_ip(u_node):
             dict_for_scope_probably[f'{u_node}'] = 'IP'
         if ch.is_domain(u_node):
@@ -592,7 +595,9 @@ def dfs_for_sure(u_node, used, dict_for_scope_sure, dict_for_scope_probably):
             dfs_for_sure(nbr, used, dict_for_scope_sure, dict_for_scope_probably)
         elif 'Scope' in G.nodes[f'{nbr}'] and 0.5 <= G.nodes[nbr]['Scope'] < 1 and used[nbr] is False:
             dfs_possible(nbr, used, dict_for_scope_probably)
-    if G.nodes[u_node]['Scope'] >= 1:
+    if G.nodes[f'{u_node}']['Scope'] >= 1:
+        G.nodes[f'{u_node}']['color'] = '#E8008D'
+        G.nodes[f'{u_node}']['title'] = 'In scope for sure'
         if ch.is_ip(u_node):
             dict_for_scope_sure[f'{u_node}'] = 'IP'
         if ch.is_domain(u_node):
@@ -621,7 +626,7 @@ if __name__ == "__main__":
     print(f"Program was launched.\nIt can be long enough but it's working.\n")
     t1 = time.time_ns()
     original_domain = Finder(args)
-    with open('test.edgelist', 'wb') as f:
+    with open('graph.edgelist', 'wb') as f:
         nx.write_edgelist(G, f)
     print('Researcher was launched.')
 
@@ -635,6 +640,10 @@ if __name__ == "__main__":
     t2 = time.time_ns()
 
     print(f"\nВычисление заняло {(t2 - t1) / 1e9:0.3f} секунд.\n")
+
+    # For graphical output of graph
+    for n in G.nodes():
+        G.nodes[n]['title'] = 'Not in scope'
 
     with open('result.txt', 'w') as f:
         used = dict.fromkeys([n for n in G], False)
@@ -673,10 +682,13 @@ if __name__ == "__main__":
             if value == 'URI':
                 print(key, file=f)
                 print(key)
-
+    print()
     # Graphical output of the graph
-    #  nx.draw_networkx(G)
-    #  plt.show()  # necessary
+    # net = Network(height='100%', width='65%', bgcolor='#222222',
+    #               font_color='white', notebook=True, directed=True)
+    # net.from_nx(G, show_edge_weights=False)
+    # net.show_buttons(filter_=['physics'])
+    # net.show('nx.html')
 
 # возможные взаимосвязи:
 # favicon.hash_sha256
