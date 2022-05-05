@@ -16,14 +16,10 @@ def parse_args(argv):
         sys.exit()
     elif argv[1][0] != '-':
         args = [argv[1]]
-        print("arg = ", args[0])
     elif len(argv) == 2:
         args = [argv[1]]
-        print("flags = ", args[0])
     else:
         args = [argv[1], argv[2]]
-        print("flags = ", args[0])
-        print("arg = ", args[1])
     return args
 
 
