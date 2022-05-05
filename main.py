@@ -5,7 +5,6 @@ import re
 import netlas
 import networkx as nx
 from urlextract import URLExtract
-import matplotlib.pyplot as plt
 import json
 from tlds import arr_tlds
 
@@ -193,8 +192,8 @@ def direct_dns_records(domain_name):
 
             for found_ip in ip_regex:
                 G.add_edge(f'{domain_name}', f'{found_ip}', URI=True)
-                check_and_add_Descr(G, domain_name, found_ip,
-                                    f'This is an IPv4 address found in a txt-record of the {domain_name} domain. ')
+                msg = f'This is an IPv4 address found in a txt-record of the {domain_name} domain. '
+                check_and_add_Descr(G, domain_name, found_ip, msg)
                 check_and_add_Weight(G, found_ip, CERTAINLY)
                 if 'Checked' not in G.nodes[f'{found_ip}']:
                     G.nodes[f'{found_ip}']['Checked'] = False
@@ -204,11 +203,11 @@ def direct_dns_records(domain_name):
                                         f'{txt_record}')
                 for found_domain in tlds_regex:
                     if not found_domain[-1:].isalpha():
-                        found_domain = found_domain[
-                                       :-1]  # устранение лишнего не алфавитного символа(регулярное выражение на пару строк выше иногда выдает строку с лишним символом)
-                    G.add_edge(f'{domain_name}', f'{found_domain}', side_domain=True)
-                    check_and_add_Descr(G, domain_name, found_domain,
-                                        f'This is an domain found in a txt-record of the {domain_name} domain. ')
+                        found_domain = found_domain[:-1]
+                        # устранение лишнего не алфавитного символа(регулярное выражение на пару строк выше иногда выдает строку с лишним символом)
+                    G.add_edge(f'{domain_name}', f'{found_domain}', domain_in_txt=True)
+                    msg = f'This is an domain found in a txt-record of the {domain_name} domain. '
+                    check_and_add_Descr(G, domain_name, found_domain, msg)
                     check_and_add_Weight(G, found_domain, HIGHLY_UNLIKELY)
                     if 'Checked' not in G.nodes[f'{found_domain}']:
                         G.nodes[f'{found_domain}']['Checked'] = False
@@ -228,7 +227,7 @@ def direct_dns_records(domain_name):
                 else:
                     G.add_edge(f'{domain_name}', f'{a}', a_record=True)
                     check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
-                    check_and_add_Weight(G, a, 0.3)  # возможно стоит поменять и сделать константу с весом
+                    check_and_add_Weight(G, a, PROBABLY)
                     if 'Checked' not in G.nodes[f'{a}']:
                         G.nodes[f'{a}']['Checked'] = False
 
@@ -269,8 +268,6 @@ def subdomains(domain_name):  # *.domain.name
     downloaded_query = netlas_connection.download(query=sQuery, datatype='domain', size=cnt_of_res['count'])
 
     for query_res in downloaded_query:
-        if query_res.decode('UTF-8')[len(query_res) - 1] == ',':
-            query_res = query_res[:len(query_res) - 1]
         item = json.loads(query_res)
 
         subdomain = item['data']['domain']
@@ -290,8 +287,6 @@ def sidedomains(domain_name, original_domain=''):  # domain.[ru|com|cz|...]
     downloaded_query = netlas_connection.download(query=sQuery, datatype='domain', size=cnt_of_res['count'])
 
     for query_res in downloaded_query:
-        if query_res.decode('UTF-8')[len(query_res) - 1] == ',':
-            query_res = query_res[:len(query_res) - 1]
         item = json.loads(query_res)
 
         side_domain = item['data']['domain']
@@ -344,8 +339,6 @@ def google_tags(body, domain):
     downloaded_query = netlas_connection.download(query=sQuery, datatype='response', size=cnt_of_res['count'])
 
     for query_res in downloaded_query:
-        if query_res.decode('UTF-8')[len(query_res) - 1] == ',':
-            query_res = query_res[:len(query_res) - 1]
         item = json.loads(query_res)
 
         data = item['data']
@@ -407,8 +400,6 @@ def services_IP(IP):
     downloaded_query = netlas_connection.download(query=sQuery, datatype='response', size=cnt_of_res['count'])
 
     for query_res in downloaded_query:
-        if query_res.decode('UTF-8')[len(query_res) - 1] == ',':
-            query_res = query_res[:len(query_res) - 1]
         item = json.loads(query_res)
 
         data = item['data']
@@ -494,8 +485,6 @@ def URI_search(IP):  # Check via responses records
     downloaded_query = netlas_connection.download(query=sQuery, datatype='response', size=cnt_of_res['count'])
 
     for query_res in downloaded_query:
-        if query_res.decode('UTF-8')[len(query_res) - 1] == ',':
-            query_res = query_res[:len(query_res) - 1]
         item = json.loads(query_res)
         uri = item['data']['uri']
         G.add_edge(f'{IP}', f'{uri}', URI=True)
@@ -582,7 +571,6 @@ def Analyser():
                         check_and_add_Weight(G, nbr, CERTAINLY)
                         # тут возможно стоит добавить вес и другой вершине (первое условие в ифе),
                         # но не возникнет ли лишнее добавление веса?
-                        # стоит ли добавлять мх-запись в скоуп?
             if ch.is_ip(tmp[1]) and 'a_record' in G[f'{tmp[0]}'][f'{tmp[1]}'] and G[f'{tmp[0]}'][f'{tmp[1]}'][
                 'a_record'] is False:
                 for nbr, datadict in G.pred[f'{tmp[1]}'].items():
@@ -592,22 +580,34 @@ def Analyser():
                         # является айпи массовой регистрации
 
 
-def dfs_for_sure(u_node, used, f):
-    used[f'{u_node}'] = True
-    for nbr, datadict in G.succ[f'{u_node}'].items():
-        if 'Scope' in G.nodes[f'{nbr}'] and G.nodes[nbr]['Scope'] >= 1 and used[nbr] is False:
-            dfs_for_sure(nbr, used, f)
-    if G.nodes[u_node]['Scope'] >= 1:
-        print(u_node, '\twith weight: ', G.nodes[f'{u_node}']['Scope'], file=f)
-
-
-def dfs_possible(u_node, used, f):
+def dfs_possible(u_node, used, dict_for_scope_probably):
     used[f'{u_node}'] = True
     for nbr, datadict in G.succ[f'{u_node}'].items():
         if 'Scope' in G.nodes[f'{nbr}'] and 0.5 <= G.nodes[nbr]['Scope'] < 1 and used[nbr] is False:
-            dfs_possible(nbr, used, f)
+            dfs_possible(nbr, used, dict_for_scope_probably)
     if 0.5 <= G.nodes[u_node]['Scope'] < 1:
-        print(u_node, '\twith weight: ', G.nodes[f'{u_node}']['Scope'], file=f)
+        if ch.is_ip(u_node):
+            dict_for_scope_probably[f'{u_node}'] = 'IP'
+        if ch.is_domain(u_node):
+            dict_for_scope_probably[f'{u_node}'] = 'domain'
+        if ch.is_uri(u_node):
+            dict_for_scope_probably[f'{u_node}'] = 'URI'
+
+
+def dfs_for_sure(u_node, used, dict_for_scope_sure, dict_for_scope_probably):
+    used[f'{u_node}'] = True
+    for nbr, datadict in G.succ[f'{u_node}'].items():
+        if 'Scope' in G.nodes[f'{nbr}'] and G.nodes[nbr]['Scope'] >= 1 and used[nbr] is False:
+            dfs_for_sure(nbr, used, dict_for_scope_sure, dict_for_scope_probably)
+        elif 'Scope' in G.nodes[f'{nbr}'] and 0.5 <= G.nodes[nbr]['Scope'] < 1 and used[nbr] is False:
+            dfs_possible(nbr, used, dict_for_scope_probably)
+    if G.nodes[u_node]['Scope'] >= 1:
+        if ch.is_ip(u_node):
+            dict_for_scope_sure[f'{u_node}'] = 'IP'
+        if ch.is_domain(u_node):
+            dict_for_scope_sure[f'{u_node}'] = 'domain'
+        if ch.is_uri(u_node):
+            dict_for_scope_sure[f'{u_node}'] = 'URI'
 
 
 if __name__ == "__main__":
@@ -643,26 +643,48 @@ if __name__ == "__main__":
 
     t2 = time.time_ns()
 
-    with open('test.edgelist', 'r') as f:
-        print(*f.readlines(), sep='')
+    print(G)
+    print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
 
     with open('result.txt', 'w') as f:
         used = dict.fromkeys([n for n in G], False)
+        scope_for_sure = {}
+        scope_probably = {}
         print('In scope for sure:', file=f)
-        dfs_for_sure(original_domain, used, f)
+        print('In scope for sure:')
+        dfs_for_sure(original_domain, used, scope_for_sure, scope_probably)
+        for key, value in scope_for_sure.items():
+            if value == 'IP':
+                print(key, file=f)
+                print(key)
+        for key, value in scope_for_sure.items():
+            if value == 'domain':
+                print(key, file=f)
+                print(key)
+        for key, value in scope_for_sure.items():
+            if value == 'URI':
+                print(key, file=f)
+                print(key)
         print('Probably in scope:', file=f)
-        dfs_possible(original_domain, used, f)
-    print(G)
-    print(f"Вычисление заняло {(t2 - t1) / 1e9:0.3f} секунд")
+        for key, value in scope_probably.items():
+            if value == 'IP':
+                print(key, file=f)
+                print(key)
+        for key, value in scope_probably.items():
+            if value == 'domain':
+                print(key, file=f)
+                print(key)
+        for key, value in scope_probably.items():
+            if value == 'URI':
+                print(key, file=f)
+                print(key)
+
     # Graphical output of the graph
     #  nx.draw_networkx(G)
     #  plt.show()  # necessary
 
 # возможные взаимосвязи:
-# в тхт записях поискать домены и айпи. Они будут входить в скоуп.
-# Если есть перекрёстные ссылки на сайтах, то они входят в скоуп.
 # favicon.hash_sha256
-# Google-tag-manager: GTM-_______
 # Сертификаты
 # Веса взаимосвязей
 # 1. Поддомены    - 1.0 V
@@ -673,7 +695,7 @@ if __name__ == "__main__":
 # 6. сертификат   - 1.0
 # 7. cross-link   - 0.7
 # 8. side-domains - 0.3 слишком сложно реализовать
-# 9. a-записи     - 0.3 V
+# 9. a-записи     - 0.5 V
 # 10.ptr-записи   - 0.1
 # 11.a+ptr        - 1.0
 # 12.сервисы      - 1.0 V
