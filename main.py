@@ -39,8 +39,49 @@ def check_and_add_Weight(graph, node, weight):
         graph.nodes[f'{node}']['Scope'] = weight
 
 
+def cross_links(domain_name, domain_name_orig):
+    result = 0
+    finisheds = 0
+    sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
+    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
+    number_of_page = 0
+    while cnt_of_res['count'] > 0:
+        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
+        items = query_res['items']
+        for item in items:
+            data = item['data']
+            http = data['http']
+
+            if 'status_code' in http:
+                sc = http['status_code']
+                if sc == 200:
+                    if 'body' in http:
+                        body = http['body']
+                        extractor = URLExtract()
+                        urls = extractor.find_urls(body, check_dns=True)
+                        for url in urls:
+                            mark = 1
+
+                            index = str(url).find(str(domain_name_orig))
+                            if index != -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            if mark == 1:
+                                result = 1
+                                return result
+
+        cnt_of_res['count'] -= 20  # number of results on one page
+        number_of_page += 1
+        finisheds += 20
+        if finisheds == 100:
+            break
+    return result
+
+
 def services_dom(domain_name):
-    # Нахождение сервисов на домене, всё работает. Махров В.Д.
+    """Нахождение сервисов на домене."""
     sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     number_of_page = 0
@@ -53,18 +94,10 @@ def services_dom(domain_name):
             http = data['http']
             uri = data['uri']
             ip = data['ip']
-            header = http['headers']
 
             if 'status_code' in http:
                 sc = http['status_code']
-                if sc == 301 or sc == 302:
-                    if 'location' in header:
-                        pass
-                        # locs = header['location']
-                        # for loc in locs:
-                        #     print('Service on domain (' + str(domain_name) + '): ' + uri + ', Status code: ' + str(
-                        #         sc) + ', Redirected to: ' + loc)
-                else:
+                if sc != 301 and sc != 302:
                     sQuery2 = "a:" + ip
                     cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
 
@@ -86,7 +119,7 @@ def services_dom(domain_name):
                         body = http['body']
                         google_tags(str(body), domain_name)
 
-                        # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
+            # 09.04.22 - добавлен поиск ссылок на сервисе. Немножко наговнокодил, чтобы не выводились картинки
             # и js-шлак. В поиске сервисов на айпи та же фигня. Исправлю на человеческий код, как только будет возможность. Махров В.Д.
             if 'body' in http:
                 body = http['body']
@@ -170,6 +203,7 @@ def services_dom(domain_name):
 
 
 def direct_dns_records(domain_name):
+    """Поиск записей у DNS сервера"""
     G.add_node(f'{domain_name}', Checked=True)
     sQuery = "domain:" + domain_name
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
@@ -260,7 +294,8 @@ def direct_dns_records(domain_name):
                     G.nodes[f'{cname}']['Checked'] = False
 
 
-def subdomains(domain_name):  # *.domain.name
+def subdomains(domain_name):
+    """Поиск поддоменов"""
     sQuery = "domain:" + "*." + domain_name
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
     if cnt_of_res['count'] == 0:
@@ -279,7 +314,8 @@ def subdomains(domain_name):  # *.domain.name
             G.nodes[f'{subdomain}']['Checked'] = False
 
 
-def sidedomains(domain_name, original_domain=''):  # domain.[ru|com|cz|...]
+def sidedomains(domain_name, original_domain=''):
+    """Поиск доменов вида domain.[ru|com|cz|...]"""
     sQuery = "domain:" + domain_name.split('.')[0] + ".*"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='domain')
     if cnt_of_res['count'] == 0:
@@ -316,6 +352,7 @@ def sidedomains(domain_name, original_domain=''):  # domain.[ru|com|cz|...]
 
 
 def domain_research(domain_name, original_domain=''):
+    """Функция для исследования домена"""
     direct_dns_records(domain_name)
     subdomains(domain_name)
     sidedomains(domain_name, original_domain)
@@ -323,7 +360,7 @@ def domain_research(domain_name, original_domain=''):
 
 
 def google_tags(body, domain):
-    # Поиск сервисов с одинаковым google-тэгом
+    """Поиск сервисов с одинаковым google-тэгом"""
     index = body.find("GTM-")
     if index != -1:
         index2 = index + 11
@@ -351,48 +388,8 @@ def google_tags(body, domain):
         check_and_add_Weight(G, uri, CERTAINLY)
 
 
-def cross_links(domain_name, domain_name_orig):
-    result = 0
-    finisheds = 0
-    sQuery = "(host:" + domain_name + ") AND ((protocol:http) OR (protocol:https))"
-    cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
-    number_of_page = 0
-    while cnt_of_res['count'] > 0:
-        query_res = netlas_connection.query(query=sQuery, datatype='response', page=number_of_page)
-        items = query_res['items']
-        for item in items:
-            data = item['data']
-            http = data['http']
-
-            if 'status_code' in http:
-                sc = http['status_code']
-                if sc == 200:
-                    if 'body' in http:
-                        body = http['body']
-                        extractor = URLExtract()
-                        urls = extractor.find_urls(body, check_dns=True)
-                        for url in urls:
-                            mark = 1
-
-                            index = str(url).find(str(domain_name_orig))
-                            if index != -1 and mark == 1:
-                                mark = 1
-                            else:
-                                mark = 0
-
-                            if mark == 1:
-                                result = 1
-                                return result
-
-        cnt_of_res['count'] -= 20  # number of results on one page
-        number_of_page += 1
-        finisheds += 20
-        if finisheds == 100:
-            break
-    return result
-
-
 def services_IP(IP):
+    """Поиск сервисов на IP"""
     sQuery = "(host:" + IP + ") AND ((protocol:http) OR (protocol:https))"
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     if cnt_of_res['count'] == 0:
@@ -405,21 +402,10 @@ def services_IP(IP):
         data = item['data']
         http = data['http']
         uri = data['uri']
-        if 'headers' in http:
-            header = http['headers']
-        else:
-            continue
 
         if 'status_code' in http:
             sc = http['status_code']
-            if sc == 301 or sc == 302:
-                if 'location' in header:
-                    pass
-                    # locs = header['location']
-                    # for loc in locs:
-                    # print('Service on IP (' + str(IP) + '): ' + uri + ', Status code: ' + str(
-                    # sc) + ', Redirected to: ' + loc)
-            else:
+            if sc != 301 and sc != 302:
                 G.add_edge(f'{IP}', f'{uri}', service_on_IP=True)
 
                 G.nodes[f'{uri}']['Checked'] = True
@@ -427,7 +413,7 @@ def services_IP(IP):
                 check_and_add_Descr(G, IP, uri, msg)
                 check_and_add_Weight(G, uri, CERTAINLY)
 
-        if 'body' in http:  # Тут поиск ссылок на сервисе на айпи. Не помню, зачем, для кросс-линков?
+        if 'body' in http:  # Тут поиск ссылок на сервисе на айпи.
             body = http['body']
             extractor = URLExtract()
             urls = extractor.find_urls(body, check_dns=True)
@@ -477,7 +463,8 @@ def services_IP(IP):
                     mark = 0
 
 
-def URI_search(IP):  # Check via responses records
+def URI_search(IP):
+    """Check via response records"""
     sQuery = "host:" + IP
     cnt_of_res = netlas_connection.count(query=sQuery, datatype='response')
     if cnt_of_res['count'] == 0:
@@ -499,6 +486,7 @@ def whois_info(IP):  # Will be done later
 
 
 def IP_research(IP):
+    """Функция исследования IP"""
     URI_search(IP)  # Ports and protocols just as targets
     whois_info(IP)  # Subnets, AS and whois stuff
     services_IP(IP)
@@ -506,6 +494,7 @@ def IP_research(IP):
 
 
 def Finder(arguments):
+    """Функция первичного поиска"""
     for arg in arguments:
         if ch.is_uri(arg):
             print("URI\n")
@@ -532,6 +521,7 @@ def Finder(arguments):
 
 
 def Researcher(depth=3, original_domain=''):
+    """Функция для увеличения количества исследуемых объектов"""
     if depth == 0:
         return
     print(f'\nIn researcher. {depth} iteration.')
@@ -559,6 +549,7 @@ def Researcher(depth=3, original_domain=''):
 
 
 def Analyser():
+    """Функция для анализа имеющихся объектов"""
     with open('test.edgelist', 'r') as f:
         while True:
             tmp = f.readline().split(' ')
@@ -575,11 +566,11 @@ def Analyser():
                 for nbr, datadict in G.pred[f'{tmp[1]}'].items():
                     if 'a_record' in G[f'{nbr}'][f'{tmp[1]}']:
                         check_and_add_Weight(G, nbr, NOT_IN_SCOPE)
-                        # тут исключается тот объект (скорее всего только домен) у которого а-запись
-                        # является айпи массовой регистрации
+                        # тут исключается тот объект у которого а-запись является айпи массовой регистрации
 
 
 def dfs_possible(u_node, used, dict_for_scope_probably):
+    """Функция для поиска объектов, которые маловероятно входят в периметр"""
     used[f'{u_node}'] = True
     for nbr, datadict in G.succ[f'{u_node}'].items():
         if 'Scope' in G.nodes[f'{nbr}'] and 0.5 <= G.nodes[nbr]['Scope'] < 1 and used[nbr] is False:
@@ -594,6 +585,7 @@ def dfs_possible(u_node, used, dict_for_scope_probably):
 
 
 def dfs_for_sure(u_node, used, dict_for_scope_sure, dict_for_scope_probably):
+    """Функция для поиска объектов, которые скорее всего входят в периметр"""
     used[f'{u_node}'] = True
     for nbr, datadict in G.succ[f'{u_node}'].items():
         if 'Scope' in G.nodes[f'{nbr}'] and G.nodes[nbr]['Scope'] >= 1 and used[nbr] is False:
@@ -626,7 +618,7 @@ if __name__ == "__main__":
             sys.exit()
         else:
             netlas_connection = netlas.Netlas(api_key=api_key)
-    print(f'Program was launched.\n')
+    print(f"Program was launched.\nIt can be long enough but it's working.\n")
     t1 = time.time_ns()
     original_domain = Finder(args)
     with open('test.edgelist', 'wb') as f:
@@ -650,7 +642,9 @@ if __name__ == "__main__":
         scope_probably = {}
         print('In scope for sure:', file=f)
         print('In scope for sure:')
+
         dfs_for_sure(original_domain, used, scope_for_sure, scope_probably)
+
         for key, value in scope_for_sure.items():
             if value == 'IP':
                 print(key, file=f)
@@ -663,8 +657,10 @@ if __name__ == "__main__":
             if value == 'URI':
                 print(key, file=f)
                 print(key)
+
         print('\nProbably in scope:', file=f)
         print('\nProbably in scope:')
+
         for key, value in scope_probably.items():
             if value == 'IP':
                 print(key, file=f)
