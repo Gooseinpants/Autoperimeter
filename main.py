@@ -63,15 +63,58 @@ def cross_links(domain_name, domain_name_orig):
                         for url in urls:
                             mark = 1
 
-                            index = str(url).find(str(domain_name_orig))
-                            if index != -1 and mark == 1:
+                            index = str(url).find(".png")
+                            if index == -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            index = str(url).find(".ico")
+                            if index == -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            index = str(url).find(".css")
+                            if index == -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            index = str(url).find(".svg")
+                            if index == -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            index = str(url).find(".jpg")
+                            if index == -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            index = str(url).find(".pdf")
+                            if index == -1 and mark == 1:
+                                mark = 1
+                            else:
+                                mark = 0
+
+                            index = str(url).find(".js")
+                            if index == -1 and mark == 1:
                                 mark = 1
                             else:
                                 mark = 0
 
                             if mark == 1:
-                                result = 1
-                                return result
+                                index = str(url).find(str(domain_name_orig))
+                                if index != -1:
+                                    mark = 1
+                                else:
+                                    mark = 0
+
+                                if mark == 1:
+                                    result = 1
+                                    return result
 
         cnt_of_res['count'] -= 20  # number of results on one page
         number_of_page += 1
@@ -109,8 +152,6 @@ def services_dom(domain_name):
                         msg = f'This is a service on domain ({domain_name}) with status code: {sc}. '
                         check_and_add_Descr(G, domain_name, uri, msg)
                         check_and_add_Weight(G, uri, CERTAINLY)
-                    # else:
-                    # print('Obana mass registration')
 
             # Поиск по g-тэгам
             if 'tag' in data:
@@ -254,7 +295,7 @@ def direct_dns_records(domain_name):
                 sQuery2 = "a:" + a
                 cnt_of_res2 = netlas_connection.count(query=sQuery2, datatype='domain')
                 # вес пока добавляется а-записи, которая не является айпи массовой регистрации
-                if cnt_of_res2['count'] > 30:
+                if cnt_of_res2['count'] > 50:
                     # является айпи массовой регистрации -> не является а-записью
                     G.add_edge(f'{domain_name}', f'{a}', a_record=False)
                     check_and_add_Descr(G, domain_name, a, f'This is an a-record received from {domain_name}. ')
@@ -414,54 +455,7 @@ def services_IP(IP):
                 check_and_add_Descr(G, IP, uri, msg)
                 check_and_add_Weight(G, uri, CERTAINLY)
 
-        if 'body' in http:  # Тут поиск ссылок на сервисе на айпи.
-            body = http['body']
-            extractor = URLExtract()
-            urls = extractor.find_urls(body, check_dns=True)
-            for url in urls:
-                mark = 1
 
-                index = str(url).find(".png")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".ico")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".css")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".svg")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".jpg")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".pdf")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
-
-                index = str(url).find(".js")
-                if index == -1 and mark == 1:
-                    mark = 1
-                else:
-                    mark = 0
 
 
 def URI_search(IP):
@@ -684,11 +678,10 @@ if __name__ == "__main__":
                 print(key)
     print()
     # Graphical output of the graph
-    # net = Network(height='100%', width='65%', bgcolor='#222222',
-    #               font_color='white', notebook=True, directed=True)
-    # net.from_nx(G, show_edge_weights=False)
-    # net.show_buttons(filter_=['physics'])
-    # net.show('nx.html')
+    net = Network(height='100%', width='65%', bgcolor='#222222',font_color='white', notebook=True, directed=True)
+    net.from_nx(G, show_edge_weights=False)
+    net.show_buttons(filter_=['physics'])
+    net.show('nx.html')
 
 # возможные взаимосвязи:
 # favicon.hash_sha256
