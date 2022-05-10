@@ -472,6 +472,7 @@ def URI_search(IP):
         G.add_edge(f'{IP}', f'{uri}', URI=True)
         msg = f'This is an URI received from {IP}. '
         check_and_add_Descr(G, IP, uri, msg)
+        check_and_add_Weight(G, uri, CERTAINLY)
         if 'Checked' not in G.nodes[f'{uri}']:
             G.nodes[f'{uri}']['Checked'] = False
 
@@ -689,11 +690,13 @@ if __name__ == "__main__":
                 print(key, file=f)
                 print(key)
     print()
+
     # Graphical output of the graph
-    net = Network(height='100%', width='65%', bgcolor='#222222',font_color='white', notebook=True, directed=True)
-    net.from_nx(G, show_edge_weights=False)
-    net.show_buttons(filter_=['physics'])
-    net.show('nx.html')
+    # net = Network(height='100%', width='65%', bgcolor='#222222',
+    #               font_color='white', notebook=True, directed=True)
+    # net.from_nx(G, show_edge_weights=False)
+    # net.show_buttons(filter_=['physics'])
+    # net.show('nx.html')
 
 # возможные взаимосвязи:
 # favicon.hash_sha256
@@ -712,3 +715,28 @@ if __name__ == "__main__":
 # 11.a+ptr        - 1.0
 # 12.сервисы      - 1.0 V
 # 13.cross-link + side domain - 1.0 V
+
+
+# Дальнейшее развитие:
+# 1) Можно поискать такие вещи как
+# a.com     a.name
+#      \  /
+#     b.com
+
+# 2) acribia... редиректится на какой-то mail...
+#  netlas делает то же самое, но на другой mail
+#  и у этих мэйлов общая а-запись
+
+# 3) Можно сохранять редиректы (код 302, 301) и что-то с ними делать
+# 4) Добавить проверку доменов такого вида acribia.spb.ru
+# 5) Возможная взаимосвязь для domain.*  :общее наименование организации, общий домен такого-то уровня
+# 6) из URI можно вытащить айпи/домен
+# 7) в баннерах можно искать email
+# 8) добавить другие метрики, аналитики помимо g-tag и может стоит их добавлять в граф
+# 9) редиректы 301 и 302 возвращают URL там можно поискать что-то
+# 10) пользоваться не только netlas
+# 11) общий DNS сервер у двух доменов, разные домены ведут на один айпи, разные домены, но у одного провайдера
+# 12) в тхт-записи могут храниться ключи верификации. С ними можно что-то поделать
+# 13) для айпи искать ещё подсети, автономные системы, whois записи. Использовать  ipio.info
+# 14) добавить обработку подсетей (ip входящие в подсеть могут быть связаны с другими ip; посмотреть сети влево-вправо)
+# 15) Добавить обработку автономных систем (то же что и в подсетях + на кого зареган, что тоже может быть взаимосвязью)

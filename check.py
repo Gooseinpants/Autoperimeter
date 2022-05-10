@@ -26,14 +26,11 @@ def is_domain(s):
 
 
 def is_uri(s):
-    print('Checking for uri ', s)
     match = re.fullmatch(
         r'(http|https|smtp|smtps|imap|imaps|ftp|telnet|smtpstarttls|elasticsearch|memcached|mongodb|mssql|mysql|oracle|pop3|postgres|redis|smb|ssh|t3):(?:\/\/(?:((?:[a-z0-9-._~!$&\'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&\'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(\/(?:[a-z0-9-._~!$&\'()*+,;=:@\/]|%[0-9A-F]{2})*)?|(\/?(?:[a-z0-9-._~!$&\'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&\'()*+,;=:@\/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&\'()*+,;=:\/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&\'()*+,;=:\/?@]|%[0-9A-F]{2})*))?$\/?', s)
     if match:
-        print('URI')
         return 1
     else:
-        print('Not URI')
         return 0
 
 
