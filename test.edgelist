@@ -1,0 +1,62 @@
+acribia.ru ['v=spf1 ip4:81.29.134.163 include:_spf.google.com ~all'] {'txt_record': True, 'Description': 'This is a txt-record received from acribia.ru. '}
+acribia.ru 81.29.134.163 {'URI': True, 'Description': 'This is an IPv4 address found in a txt-record of the acribia.ru domain. '}
+acribia.ru spf.google.com {'domain_in_txt': True, 'Description': 'This is an domain found in a txt-record of the acribia.ru domain. '}
+acribia.ru 185.215.4.10 {'a_record': False, 'Description': 'This is an a-record received from acribia.ru. '}
+acribia.ru ns1.reg.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.ru. '}
+acribia.ru ns2.reg.ru {'ns_record': True, 'Description': 'This is an ns-record received from acribia.ru. '}
+acribia.ru cdn.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru proget.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru soc.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru bravo.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru xmpp.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru kyy.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru autodiscover.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru telegrambot.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru wiki.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru en.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru voip.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru mail-msk01.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru mail-gw.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru www.en.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru www.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru mail.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru alert.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru cw.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+acribia.ru tets.acribia.ru {'subdomain': True, 'Description': 'This is a subdomain of the acribia.ru domain. '}
+81.29.134.163 smtp://81.29.134.163:25 {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 smtpstarttls://81.29.134.163:25 {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 http://81.29.134.163/ {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 imaps://81.29.134.163:993 {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. '}
+81.29.134.163 https://81.29.134.163/ {'URI': True, 'Description': 'This is an URI received from 81.29.134.163. This is a service on IP (81.29.134.163): with status code: 403. ', 'service_on_IP': True}
+ns1.reg.ru 194.58.117.17 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 176.99.13.17 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 194.58.117.13 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 194.67.73.73 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 176.99.13.11 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 194.58.117.11 {'a_record': False, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 176.99.13.13 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 194.58.117.15 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 176.99.13.15 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns1.reg.ru 194.67.73.74 {'a_record': True, 'Description': 'This is an a-record received from ns1.reg.ru. '}
+ns2.reg.ru 194.58.117.16 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 176.99.13.18 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 176.99.13.16 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 194.58.117.18 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 176.99.13.12 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 194.58.117.12 {'a_record': False, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 194.58.117.14 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 194.67.73.76 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 194.67.73.75 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+ns2.reg.ru 176.99.13.14 {'a_record': True, 'Description': 'This is an a-record received from ns2.reg.ru. '}
+soc.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from soc.acribia.ru. '}
+bravo.acribia.ru 81.29.134.165 {'a_record': True, 'Description': 'This is an a-record received from bravo.acribia.ru. '}
+autodiscover.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from autodiscover.acribia.ru. '}
+autodiscover.acribia.ru mail.acribia.ru {'cname_record': True, 'Description': 'This is a cname-record received from autodiscover.acribia.ru. '}
+wiki.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from wiki.acribia.ru. '}
+en.acribia.ru ['google-site-verification=DdQTlXtlLTzDtghKAbF2PS6FfVXV0_Vkg63plEo-JCs'] {'txt_record': True, 'Description': 'This is a txt-record received from en.acribia.ru. '}
+voip.acribia.ru 81.29.134.162 {'a_record': True, 'Description': 'This is an a-record received from voip.acribia.ru. '}
+mail-gw.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from mail-gw.acribia.ru. '}
+www.en.acribia.ru 185.215.4.10 {'a_record': False, 'Description': 'This is an a-record received from www.en.acribia.ru. '}
+www.acribia.ru 185.215.4.10 {'a_record': False, 'Description': 'This is an a-record received from www.acribia.ru. '}
+mail.acribia.ru 81.29.134.163 {'a_record': True, 'Description': 'This is an a-record received from mail.acribia.ru. '}
+alert.acribia.ru 81.29.134.164 {'a_record': True, 'Description': 'This is an a-record received from alert.acribia.ru. '}

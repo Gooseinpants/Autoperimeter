@@ -647,15 +647,21 @@ if __name__ == "__main__":
         print('In scope for sure:')
 
         dfs_for_sure(original_domain, used, scope_for_sure, scope_probably)
-
+        
+        print('\nIPs:')
+        print('\nIPs:', file=f)
         for key, value in scope_for_sure.items():
             if value == 'IP':
                 print(key, file=f)
                 print(key)
+        print('\nDomains:')
+        print('\nDomains:', file=f)
         for key, value in scope_for_sure.items():
             if value == 'domain':
                 print(key, file=f)
                 print(key)
+        print('\nURIs:')
+        print('\nURIs:', file=f)
         for key, value in scope_for_sure.items():
             if value == 'URI':
                 print(key, file=f)
@@ -664,14 +670,20 @@ if __name__ == "__main__":
         print('\nProbably in scope:', file=f)
         print('\nProbably in scope:')
 
+        print('\nIPs:')
+        print('\nIPs:', file=f)
         for key, value in scope_probably.items():
             if value == 'IP':
                 print(key, file=f)
                 print(key)
+        print('\nDomains:')
+        print('\nDomains:', file=f)
         for key, value in scope_probably.items():
             if value == 'domain':
                 print(key, file=f)
                 print(key)
+        print('\nURIs:')
+        print('\nURIs:', file=f)
         for key, value in scope_probably.items():
             if value == 'URI':
                 print(key, file=f)
