@@ -560,7 +560,7 @@ def Analyser():
 
 
 if __name__ == "__main__":
-    api_key = 'CROmGycBPm7DMa8513U3b8SVnkG1t7ET'
+    api_key = ''
     args = sv.parse_args(sys.argv)
 
     for i in args:
